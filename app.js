@@ -1,28 +1,27 @@
-const express = require("express");
-const morgan = require("morgan");
-//const helmet = require("helmet")
-
-
+const userRouter = require('./Routers/userRouter')
+const express = require('express')
+const bodyParser = require('body-parser')
 const app = express();
-
-
-
-// Routers
-const appError = require("./utils/appError")
-///const err = require("./controllers/errorController")
-
-
-if (process.env.NODE_ENV === "development") {
-    app.use(morgan("dev"));
-}
-
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(bodyParser.json())
 
-app.all('*', (req, res, next) => {
-  next(new appError(`Can't find ${req.originalUrl} on this server `, 404))
+app.use(express.urlencoded({ extended: false}));
+
+app.set('view engine', 'ejs')
+
+
+
+
+app.use('/scooby/api/users',userRouter)
+
+app.all('*',(req,res,next)=>{
+    res.status(404).json({
+        status:'fail',
+        message: `can not find ${req.originalUrl} on this server !`    
+    })
 })
 
-//app.use(err)
+module.exports= app
+//nscc hkwx qaka rhmm
 
-module.exports = app
+

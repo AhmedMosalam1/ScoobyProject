@@ -1,41 +1,16 @@
-require("dotenv").config();
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
+const dotenv = require('dotenv').config({path:"./config.env"})
+const app = require('./app')
 
-process.on('uncaughtException', err => {
-    console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
-    console.log(err.name, err.message);
-    process.exit(1)
+const DB = process.env.DATABASE.replace('<PASSWORD>',process.env.DATABASE_PASSWORD);
+mongoose.connect(DB,{
+    // useNewUrlParser:true,
+    // useCreateIndex:true,
+    //useFindAndModify:false,
+    //useUnifiedTopology: true
+}).then(()=>console.log("DB Connected Successfully 💜💜💜 "))
+
+const port = process.env.PORT || 3000
+const server = app.listen(port,()=>{
+    console.log(`app running on port ${port}`)
 })
-
-const app = require("./app"); // Import the app instance from app.js
-const port = process.env.PORT || 3000;
-
-
-// MongoDB connection
-mongoose
-    .connect(process.env.DB, {
-        // useNewUrlParser: true,
-        // useUnifiedTopology: true,
-    })
-    .then(() => {
-        console.log("Connected to MongoDB");
-        // Server start
-        app.listen(port, () => {
-            console.log(`Server is running on port ${port}`);
-        });
-    })
-    .catch((error) => {
-        console.error("Error connecting to MongoDB:", error);
-    });
-
-
-process.on('unhandledRejection', err => {
-    console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
-    console.log(err.name, err.message);
-    server.close(() => {
-        process.exit(1)
-    })
-})
-
-
-
