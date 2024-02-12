@@ -1,5 +1,5 @@
 const catchAsync = require('express-async-handler');
-const userModel = require('../models/userModel')
+const userModel = require('../Models/userModel')
 const appError = require("../utils/appError")
 const jwt = require('jsonwebtoken')
 const nodemailer=require('nodemailer')
