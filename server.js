@@ -1,4 +1,4 @@
-require("dotenv").config();
+require('dotenv').config();
 const mongoose = require("mongoose");
 
 process.on('uncaughtException', err => {
@@ -18,7 +18,7 @@ mongoose
         // useUnifiedTopology: true,
     })
     .then(() => {
-        console.log("Connected to MongoDB");
+        console.log("DB connected Successfully 💜💜💜");
         // Server start
         app.listen(port, () => {
             console.log(`Server is running on port ${port}`);
