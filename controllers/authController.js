@@ -3,7 +3,7 @@ const userModel = require('../models/userModel')
 const appError = require("../utils/appError")
 const jwt = require('jsonwebtoken')
 const nodemailer=require('nodemailer')
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+//process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 
 const createSendToken = (res, result, statusCode) => {
