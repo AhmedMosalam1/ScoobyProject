@@ -4,7 +4,7 @@ const facebookStrategy = require('passport-facebook').Strategy;
 //const keys = require('./keys');
 //const User = require('../models/user-model');
 const authController = require('../controllers/authController')
-const userModel = require('../models/userModel')
+const userModel = require('../Models/userModel')
 // const express_session = require('express-session');
 // app.use(express_session);
 require("dotenv").config();
