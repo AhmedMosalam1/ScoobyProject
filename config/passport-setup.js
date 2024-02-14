@@ -24,7 +24,7 @@ passport.use(
         // options for google strategy
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: 'https://scoobyfamily.onrender.com/auth/google/redirect'
+        callbackURL: 'https://scoobyfamily.onrender.com/scooby/api/users/auth/google/redirect'
     }, async (res,accessToken, refreshToken, profile, done) => {
         // check if user already exists in our own db
         await userModel.findOne({ accountId: profile.id, provider: profile.provider }).then(async (currentUser) => {
