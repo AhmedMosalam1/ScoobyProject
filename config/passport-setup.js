@@ -58,7 +58,7 @@ passport.use(new facebookStrategy({
     // pull in our app id and secret from our auth.js file
     clientID: process.env.FACEBOOK_CLIENT_ID,
     clientSecret: process.env.FACEBOOK_SECRET_ID,
-    callbackURL: "https://scoobyfamily.onrender.com/scooby/api/users/facebook/callback",
+    callbackURL: "https://scoobyfamily.onrender.com/scooby/api/users/auth/facebook/callback",
     profileFields: ['id', 'displayName', 'name', 'gender', 'picture.type(large)', 'email']
 
 },// facebook will send back the token and profile
