@@ -11,7 +11,7 @@ router.post("/forgotPassword",authController.sendforgotpasslink)
 router.post('/reset-password/:userId/:token',authController.getresetpass)
 
 router.get('/google', passport.authenticate('google', {scope: ['profile'],}));
-router.get('/auth/google/redirect', passport.authenticate('google'),);
+router.get('/oauth2/google/redirect', passport.authenticate('google'),);
 
 router.get('/facebook', passport.authenticate('facebook', { scope : 'email' }));
 router.get('/facebook/callback',passport.authenticate('facebook'));
