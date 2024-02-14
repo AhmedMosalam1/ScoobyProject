@@ -9,17 +9,17 @@ const userSchema = new mongoose.Schema({
         type:String,
         //maxlength:[20,'Maximum 10 characters'],
         //minlength:[3,'Minimum 3 characters'],
-        required:[true,'The name field must not be empty']
+        //required:[true,'The name field must not be empty']
     },
     email:{
         type:String,
-        required:[true,'Please enter your email address '],
-        validate:[validator.isEmail,'Please enter a valid email address, e.g.joe@mail.com valid email']
+        //required:[true,'Please enter your email address '],
+        //validate:[validator.isEmail,'Please enter a valid email address, e.g.joe@mail.com valid email']
     },
     password:{
         type:String,
-        minlength:[8,'Must at least 8 characters long'],
-        required:[true,'Please enter your password'],
+        //minlength:[8,'Must at least 8 characters long'],
+        //required:[true,'Please enter your password'],
         //select : false
     },
     // confirmPassword:{
