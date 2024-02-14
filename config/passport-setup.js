@@ -19,36 +19,38 @@ passport.deserializeUser((id, done) => {
     });
 });
 
+//const GoogleStrategy = require('passport-google-oauth20').Strategy;
+ 
 passport.use(
     new GoogleStrategy({
-        // options for google strategy
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: 'https://scoobyfamily.onrender.com/scooby/api/users/auth/google/redirect'
-    }, async (res,accessToken, refreshToken, profile, done) => {
-        //check if user already exists in our own db
-        await userModel.findOne({ accountId: profile.id, provider: profile.provider }).then(async (currentUser) => {
+    }, async (accessToken, refreshToken, profile, done) => {
+        try {
+            // Check if user already exists in our own db
+            const currentUser = await userModel.findOne({ accountId: profile.id, provider: profile.provider });
             if (currentUser) {
-                // already have this user
-                console.log('user is: ', currentUser);
-                // await authController.createSendToken(res,currentUser,200)
+                // User already exists, return the user
+                console.log('User found:', currentUser);
                 done(null, currentUser);
             } else {
-                // if not, create user in our db
-                await userModel.create({
+                // User does not exist, create a new user
+                const newUser = await userModel.create({
                     accountId: profile.id,
-                    name: profile.dispalyName,
+                    name: profile.displayName, // Note the correct spelling of 'displayName'
                     profileImage: profile._json.picture,
                     provider: profile.provider
-                }).save().then(async (newUser) => {
-                    console.log('created new user: ', newUser);
-                    //await authController.createSendToken(res, newUser, 201)
-                    done(null, newUser);
                 });
+                console.log('Created new user:', newUser);
+                done(null, newUser);
             }
-        });
+        } catch (err) {
+            console.error('Error during Google authentication:', err);
+            done(err, null);
+        }
     })
-);
+)
 
 // //facebook strategy
 passport.use(new facebookStrategy({
