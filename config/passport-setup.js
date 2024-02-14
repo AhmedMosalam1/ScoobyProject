@@ -26,28 +26,27 @@ passport.use(
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: 'https://scoobyfamily.onrender.com/scooby/api/users/auth/google/redirect'
     }, async (res,accessToken, refreshToken, profile, done) => {
-        // check if user already exists in our own db
-        // await userModel.findOne({ accountId: profile.id, provider: profile.provider }).then(async (currentUser) => {
-        //     if (currentUser) {
-        //         // already have this user
-        //         console.log('user is: ', currentUser);
-        //         // await authController.createSendToken(res,currentUser,200)
-        //         done(null, currentUser);
-        //     } else {
-        //         // if not, create user in our db
-        //         await userModel.create({
-        //             accountId: profile.id,
-        //             name: profiledispalyName,
-        //             profileImage: profile._json.picture,
-        //             provider: profile.provider
-        //         }).save().then(async (newUser) => {
-        //             console.log('created new user: ', newUser);
-        //             //await authController.createSendToken(res, newUser, 201)
-        //             done(null, newUser);
-        //         });
-        //     }
-        // });
-        console.log(profile)
+        //check if user already exists in our own db
+        await userModel.findOne({ accountId: profile.id, provider: profile.provider }).then(async (currentUser) => {
+            if (currentUser) {
+                // already have this user
+                console.log('user is: ', currentUser);
+                // await authController.createSendToken(res,currentUser,200)
+                done(null, currentUser);
+            } else {
+                // if not, create user in our db
+                await userModel.create({
+                    accountId: profile.id,
+                    name: profile.dispalyName,
+                    profileImage: profile._json.picture,
+                    provider: profile.provider
+                }).save().then(async (newUser) => {
+                    console.log('created new user: ', newUser);
+                    //await authController.createSendToken(res, newUser, 201)
+                    done(null, newUser);
+                });
+            }
+        });
     })
 );
 
