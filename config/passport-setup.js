@@ -53,38 +53,40 @@ passport.use(
 )
 
 // //facebook strategy
-passport.use(new facebookStrategy({
-
-    // pull in our app id and secret from our auth.js file
+const FacebookStrategy = require('passport-facebook').Strategy;
+ 
+passport.use(new FacebookStrategy({
+    // Pull in our app id and secret from environment variables
     clientID: process.env.FACEBOOK_CLIENT_ID,
     clientSecret: process.env.FACEBOOK_SECRET_ID,
     callbackURL: "https://scoobyfamily.onrender.com/scooby/api/users/auth/facebook/callback",
     profileFields: ['id', 'displayName', 'name', 'gender', 'picture.type(large)', 'email']
+}, async (token, refreshToken, profile, done) => {
+    try {
+        // Check if user already exists in our own db
+        const currentUser = await userModel.findOne({ accountId: profile.id, provider: profile.provider });
+        if (currentUser) {
+            // User already exists, return the user
+            console.log('User is: ', currentUser);
+            done(null, currentUser);
+        } else {
+            // User does not exist, create a new user
+            const newUser = await userModel.create({
+                accountId: profile.id,
+                name: profile.displayName,
+                profileImage: profile.photos[0].value, // Assuming the first photo is the profile picture
+                provider: profile.provider,
+                email: profile.emails ? profile.emails[0].value : null, // Check if emails are provided
+            });
+            console.log('Created new user: ', newUser);
+            done(null, newUser);
+        }
+    } catch (error) {
+        console.error('Error during Facebook authentication: ', error);
+        done(error, null);
+    }
+}));
 
-},// facebook will send back the token and profile
-    async (res,token, refreshToken, profile, done) => {
-        // check if user already exists in our own db
-        await userModel.findOne({ accountId: profile.id, provider: profile.provider }).then(async (currentUser) => {
-            if (currentUser) {
-                // already have this user
-                console.log('user is: ', currentUser);
-                // await authController.createSendToken(res,currentUser,200)
-                done(null, currentUser);
-            } else {
-                // if not, create user in our db
-                await userModel.create({
-                    accountId: profile.id,
-                    name: profiledispalyName,
-                    profileImage: profile._json.picture.data.url,
-                    provider: profile.provider,
-                    email: profile._json.email,
-                }).save().then(async (newUser) => {
-                    console.log('created new user: ', newUser);
-                    // await authController.createSendToken(res, newUser, 201)
-                    done(null, newUser);
-                });
-            }
-        });
-    })
-);
+
+
 
