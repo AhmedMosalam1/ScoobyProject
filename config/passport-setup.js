@@ -53,8 +53,7 @@ passport.use(
 )
 
 // //facebook strategy
-const FacebookStrategy = require('passport-facebook').Strategy;
- 
+
 passport.use(new FacebookStrategy({
     // Pull in our app id and secret from environment variables
     clientID: process.env.FACEBOOK_CLIENT_ID,
