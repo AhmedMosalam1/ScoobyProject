@@ -5,7 +5,7 @@ const passport = require("passport")
 const authController = require('../controllers/authController')
 
 router.post('/signup',authController.signup)
-router.get('/login',authController.login)
+router.post('/login',authController.login)
 router.get('/logout',authController.logout)
 router.post("/forgotPassword",authController.sendforgotpasslink)
 router.post('/reset-password/:userId/:token',authController.getresetpass)
