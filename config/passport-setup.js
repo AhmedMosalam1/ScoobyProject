@@ -52,13 +52,12 @@ passport.use(
     })
 )
 
-// //facebook strategy
-
+ //facebook strategy
 passport.use(new facebookStrategy({
     // Pull in our app id and secret from environment variables
     clientID: process.env.FACEBOOK_CLIENT_ID,
     clientSecret: process.env.FACEBOOK_SECRET_ID,
-    callbackURL: "https://localhost:3000/scooby/api/users/auth/facebook/callback",
+    callbackURL: "https://localhost:3000/auth/facebook/callback",
     profileFields: ['id', 'displayName', 'name', 'gender', 'picture.type(large)', 'email']
 }, async (token, refreshToken, profile, done) => {
     try {

@@ -81,7 +81,7 @@ exports.sendforgotpasslink=catchAsync(async (req,res,next)=>{
     const token=jwt.sign({email:user.email,id:user.id},secet,{
         expiresIn:'60m'
     })
-    const link=`http://localhost:3000/scooby/api/users/reset-password/${user.id}/${token}`;
+    const link=`https://scoobyfamily.onrender.com/scooby/api/users/reset-password/${user.id}/${token}`;
     const transporter=nodemailer.createTransport({
         service:'gmail',
         auth:{
