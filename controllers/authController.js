@@ -108,7 +108,10 @@ exports.sendforgotpasslink=catchAsync(async (req,res,next)=>{
         }
     })
     //res.render('link-send')
-    res.status(200).json({message:"check your email"})
+    res.status(200).json({
+        userId:user.id,
+        token
+    })
 })
 //-------------------------------------------------------------------------------------------- forget password (reset password)
 exports.getresetpass=catchAsync(async (req,res,next)=>{
