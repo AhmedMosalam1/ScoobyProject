@@ -7,8 +7,9 @@ const authController = require('../controllers/authController')
 router.post('/signup',authController.signup)
 router.post('/login',authController.login)
 router.get('/logout',authController.logout)
-router.post("/forgotPassword",authController.sendforgotpasslink)
-router.post('/reset-password/:userId/:token',authController.getresetpass)
+router.post("/forgotPassword",authController.sendforgotpasscode)
+router.post("/checkCode",authController.checkforgotpasscode)
+router.post('/reset-password/:userId',authController.getresetpass)
 
 router.get('/google', passport.authenticate('google', {scope: ['profile'],}));
 router.get('/auth/google/redirect', passport.authenticate('google'),);

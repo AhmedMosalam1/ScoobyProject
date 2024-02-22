@@ -3,7 +3,7 @@ const userModel = require('../Models/userModel')
 const appError = require("../utils/appError")
 const jwt = require('jsonwebtoken')
 const nodemailer=require('nodemailer')
-//process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 
 const createSendToken = (res, result, statusCode) => {
@@ -71,17 +71,53 @@ exports.logout = catchAsync(async (req, res) => {
     res.status(200).json({ status: 'Logout successfully' });
 })
 
-//-------------------------------------------------------------------------------------------- forget password (send link)
-exports.sendforgotpasslink=catchAsync(async (req,res,next)=>{
-    const user=await userModel.findOne({email:req.body.email})
+//-------------------------------------------------------------------------------------------- forget password (send code)
+let code 
+exports.sendforgotpasscode=catchAsync(async (req,res,next)=>{
+    // const user=await userModel.findOne({email:req.body.email})
+    // if(!user){
+    //     return next(new appError('User not found',400))
+    // }
+    // const secet=process.env.JWT_SECRET+user.password
+    // const token=jwt.sign({email:user.email,id:user.id},secet,{
+    //     expiresIn:'60m'
+    // })
+    // const link=`https://scoobyfamily.onrender.com/scooby/api/users/reset-password/${user.id}/${token}`;
+    // const transporter=nodemailer.createTransport({
+    //     service:'gmail',
+    //     auth:{
+    //         user:process.env.USER_EMAIL,
+    //         pass:process.env.USER_PASS
+    //     }
+    // })
+    // const mailOptions={
+    //     from:process.env.USER_EMAIL,
+    //     to:user.email,
+    //     subject:'reset password',
+    //     html:`<div>
+    //     <h4>Click on the link to reset your password</h4>
+    //     <p>${link}</p>
+    //         </div>`
+    // }
+    // //res.json({message:'click on this link',resetpasslink:link})
+    // console.log(link)
+    // transporter.sendMail(mailOptions,function(err,success){
+    //     if(err){
+    //         console.log(err)
+    //     }else{
+    //         console.log('Email sent : ')
+    //     }
+    // })
+    // //res.render('link-send')
+    // res.status(200).json({
+    //     userId:user.id,
+    //     token
+    // })
+    user=await userModel.findOne({email:req.body.email})
     if(!user){
         return next(new appError('User not found',400))
     }
-    const secet=process.env.JWT_SECRET+user.password
-    const token=jwt.sign({email:user.email,id:user.id},secet,{
-        expiresIn:'60m'
-    })
-    const link=`https://scoobyfamily.onrender.com/scooby/api/users/reset-password/${user.id}/${token}`;
+    code = user.getRandomNumber(100000,999999)
     const transporter=nodemailer.createTransport({
         service:'gmail',
         auth:{
@@ -93,43 +129,106 @@ exports.sendforgotpasslink=catchAsync(async (req,res,next)=>{
         from:process.env.USER_EMAIL,
         to:user.email,
         subject:'reset password',
-        html:`<div>
-        <h4>Click on the link to reset your password</h4>
-        <p>${link}</p>
-            </div>`
+        // html:`<div>
+        // <h4>Your Code</h4>
+        // <p>${code}</p>
+        //     </div>`
+        html:`<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cool OTP Display</title>
+        <style>
+            body {
+                background-color: #282c35;
+                color: #ffffff;
+                font-family: 'Arial', sans-serif;
+                text-align: center;
+                padding: 50px;
+                margin: 0;
+            }
+    
+            h1 {
+                color: #4733ab;
+            }
+    
+            .otp-container {
+                border: 2px solid #4733ab;
+                padding: 20px;
+                border-radius: 10px;
+                background-color: #1e1e1e;
+                margin-top: 20px;
+                display: inline-block;
+            }
+    
+            .otp-number {
+                font-size: 24px;
+                letter-spacing: 8px;
+                margin: 10px 0;
+                color: #4733ab;
+            }
+    
+            p {
+                font-size: 18px;
+            }
+        </style>
+    </head>
+    <body>
+    
+        <h1>Scooby Family</h1>
+    
+        <div class="otp-container">
+            <p>Your code :</p>
+            <div class="otp-number">${code}</div>
+        </div>
+    
+    </body>`
     }
-    //res.json({message:'click on this link',resetpasslink:link})
-    console.log(link)
     transporter.sendMail(mailOptions,function(err,success){
         if(err){
             console.log(err)
-        }else{
-            console.log('Email sent : ')
         }
     })
-    //res.render('link-send')
     res.status(200).json({
-        userId:user.id,
-        token
+        message : 'check your email'
     })
+})
+//-------------------------------------------------------------------------------------------- forget password (check code)
+exports.checkforgotpasscode=catchAsync(async (req,res,next)=>{
+    const userCode = Number(req.body.code);
+    if(code === userCode){
+        res.status(200).json({
+            userId : user._id
+        })
+    }else{
+        return next(new appError('Invalid code',400)) 
+    }
 })
 //-------------------------------------------------------------------------------------------- forget password (reset password)
 exports.getresetpass=catchAsync(async (req,res,next)=>{
+//     const user=await userModel.findById(req.params.userId)
+//     //console.log(req.params.userId)
+//     //console.log(req.params.token)
+//     if(!user){
+//         return next(new appError('User not found',400))
+//     }
+//     const secret=process.env.JWT_SECRET+user.password
+//     jwt.verify(req.params.token,secret)
+//     if(req.body.password !== req.body.confirmPassword ){
+//         return next(new appError('Password and confirmation password do not match',400))
+//     }
+//     user.password=req.body.password
+//     await user.save()
+//     res.json({message:"successfully changed password"})
+// next()
+
     const user=await userModel.findById(req.params.userId)
-    //console.log(req.params.userId)
-    //console.log(req.params.token)
-    if(!user){
-        return next(new appError('User not found',400))
-    }
-    const secret=process.env.JWT_SECRET+user.password
-    jwt.verify(req.params.token,secret)
     if(req.body.password !== req.body.confirmPassword ){
         return next(new appError('Password and confirmation password do not match',400))
     }
     user.password=req.body.password
     await user.save()
     res.json({message:"successfully changed password"})
-next()
+
 })
 //-------------------------------------------------------------------------------------------- 
 

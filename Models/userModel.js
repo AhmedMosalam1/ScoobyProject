@@ -57,6 +57,19 @@ userSchema.methods.generateToken = function (id) {
     });
 }
 
+userSchema.methods.getRandomNumber = function(min,max){
+// Generate a random decimal between 0 and 1
+const randomDecimal = Math.random();
+
+// Scale the decimal to fit the range between min and max
+const randomInRange = randomDecimal * (max - min + 1) + min;
+
+// Use Math.floor to round down to the nearest integer
+const randomNumber = Math.floor(randomInRange);
+
+return randomNumber;
+}
+
 const userModel = mongoose.model('user',userSchema);
 
 module.exports = userModel
