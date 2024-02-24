@@ -1,11 +1,11 @@
-require("dotenv").config();
+require('dotenv').config();
 const mongoose = require("mongoose");
 
-process.on('uncaughtException', err => {
-    console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
-    console.log(err.name, err.message);
-    process.exit(1)
-})
+// process.on('uncaughtException', err => {
+//     console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
+//     console.log(err.name, err.message);
+//     process.exit(1)
+// })
 
 const app = require("./app"); // Import the app instance from app.js
 const port = process.env.PORT || 3000;
@@ -18,7 +18,7 @@ mongoose
         // useUnifiedTopology: true,
     })
     .then(() => {
-        console.log("Connected to MongoDB");
+        console.log("DB connected Successfully");
         // Server start
         app.listen(port, () => {
             console.log(`Server is running on port ${port}`);
