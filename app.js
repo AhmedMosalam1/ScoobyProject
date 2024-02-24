@@ -13,6 +13,7 @@ const app = express();
 
 const appError = require("./utils/appError")
 const userRouter = require('./routes/authRoutes')
+const serviceRouter = require('./routes/serviceRoutes')
 
 ///const err = require("./controllers/errorController")
 
@@ -36,6 +37,7 @@ app.use(bodyParser.json());
 
 // Routers
 app.use('/scooby/api/users',userRouter)
+app.use('/scooby/api/services',serviceRouter)
 
 app.all('*', (req, res, next) => {
   next(new appError(`Can't find ${req.originalUrl} on this server `, 404))
