@@ -4,11 +4,7 @@ const facebookStrategy = require('passport-facebook').Strategy;
 //const keys = require('./keys');
 //const User = require('../models/user-model');
 const authController = require('../controllers/authController')
-<<<<<<< HEAD
-const userModel = require('../Models/userModel')
-=======
 const userModel = require('../models/userModel')
->>>>>>> afffe63e0ebea6a6bd32c39c1b8aebef2ea398b4
 // const express_session = require('express-session');
 // app.use(express_session);
 require("dotenv").config();
@@ -24,11 +20,7 @@ passport.deserializeUser((id, done) => {
 });
 
 //const GoogleStrategy = require('passport-google-oauth20').Strategy;
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> afffe63e0ebea6a6bd32c39c1b8aebef2ea398b4
 passport.use(
     new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
@@ -60,11 +52,7 @@ passport.use(
     })
 )
 
-<<<<<<< HEAD
- //facebook strategy
-=======
 //facebook strategy
->>>>>>> afffe63e0ebea6a6bd32c39c1b8aebef2ea398b4
 passport.use(new facebookStrategy({
     // Pull in our app id and secret from environment variables
     clientID: process.env.FACEBOOK_CLIENT_ID,

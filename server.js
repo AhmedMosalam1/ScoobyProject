@@ -18,11 +18,7 @@ mongoose
         // useUnifiedTopology: true,
     })
     .then(() => {
-<<<<<<< HEAD
-        console.log("DB connected Successfully 💜💜💜");
-=======
         console.log("DB connected Successfully");
->>>>>>> afffe63e0ebea6a6bd32c39c1b8aebef2ea398b4
         // Server start
         app.listen(port, () => {
             console.log(`Server is running on port ${port} 🐱🐶`);
