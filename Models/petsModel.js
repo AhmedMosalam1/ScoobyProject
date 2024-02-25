@@ -9,45 +9,51 @@ require('dotenv').config();
 const petSchema = new mongoose.Schema({
     name:{
         type:String,
-        required:[true,'The name field must not be empty']
+        //required:[true,'The name field must not be empty']
     },
-    image:{
+    petimage:{
         type:String,
-        required:[true,'The image field must not be empty']
+        //required:[true,'The image field must not be empty']
      
+    },secure_url:{
+        type:String
     },
     type:{
         type:String,
-        required:[true,'The image field must not be empty']
+       // required:[true,'The image field must not be empty']
        
     },
     birthday:{
         type:String,
-        required:[true,'The birthday field must not be empty']
+       // required:[true,'The birthday field must not be empty ..(1 Novmber 2023)']
         
     },category:{
         type:String,
-        required:[true,'The category field must not be empty']
+       // required:[true,'The category field must not be empty']
     },status:{
         type:String,
         //required:[true,'The status field must not be empty']
         
     },gender:{
         type:String,
-        required:[true,'The gender field must not be empty']
+        //required:[true,'The gender field must not be empty']
     }
-    ,discription:{
+    ,profileBio:{
         type:String,
-        required:[true,'The discription field must not be empty'] 
+        //required:[true,'The profileBio field must not be empty'] 
     },
     weigth:{
         type:Number,
-        required:[true,'The weight field must not be empty']
+        //required:[true,'The weight field must not be empty']
     },
-    height:{
-        type:Number,
-        required:[true,'The height field must not be empty']
-    },owner:{
+    adoptionDay:{
+        type:String,
+        //required:[true,'The birthday field must not be empty ..(1 Novmber 2023)']
+    },size:{
+        type:String,
+        //required:[true,'The size field must not be empty']
+    }
+    ,owner:{
         type:String,
         enum:['user','adoption'],
         //required:[true,'The adoption field must not be empty'] 
@@ -58,6 +64,12 @@ const petSchema = new mongoose.Schema({
         ref:'user',
        // required:[true,"pet must belong to a user."]
     }
+    ,institution_id:{
+        type:String
+    },
+    vaccinations_id:[{
+        type:String 
+    }]
 },
 
     {

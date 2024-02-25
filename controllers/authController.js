@@ -54,7 +54,7 @@ exports.login = catchAsync(async(req,res,next)=>{
         if(!email || !password){
             return next(new appError('please enter a valid email or password', 400))
         }
-        const result = await userModel.findOne({email})
+        const result = await userModel.findOne({email}).populate('pets')
         
         if(!result || !(await result.correctPassword(password, result.password))){
             return next(new appError('Incorrect Email or Password', 401))
@@ -285,5 +285,17 @@ exports.protect=catchAsync(async(req,res,next)=>{
 })
 
 
-
+exports.getuser=catchAsync(async(req,res,next)=>{
+    
+        
+        const user=await userModel.findById(req.user.id).populate('pets')
+            if(!user){
+                return next(new appError(`cant find  this user`,404))
+            }
+            res.status(200).json({
+                status:'success',
+                data:user
+            })
+    }
+    )
 exports = createSendToken

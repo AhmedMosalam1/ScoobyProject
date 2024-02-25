@@ -39,11 +39,11 @@ exports.resizePhotoProject = catchAsync(async (req, res, next) => {
         .jpeg({ quality: 90 })
         .toBuffer()
 
-    const filePath = `F:\Graduation\ScoobyProject-main\image`
-    const fileName = req.body.offerImage
+    const filePath = `F:\Graduation\ScoobyPlogImage`
+    const fileName = req.body.plogImage
 
     const result = await uploadToClodinary(imageBuffer, fileName, filePath)
-    console.log(result)
+    //console.log(result)
 
     req.body.secure_url = result.secure_url
 
@@ -81,7 +81,7 @@ exports.getplogs=catchAsync(async(req,res,next)=>{
 
  }else{
    
-        return next(new appError ('Email is Already Exist', 401))
+        return next(new appError ('plog should be exist', 401))
     
  }
     

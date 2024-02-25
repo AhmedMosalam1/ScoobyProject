@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const Pet=require('../Models/petsModel')
 require('dotenv').config();
 
 const userSchema = new mongoose.Schema({
@@ -35,7 +36,12 @@ const userSchema = new mongoose.Schema({
     },
     profileImage:{
         type:String
-    }
+    },
+    pets:[{
+        type:mongoose.Schema.ObjectId,
+        ref:'pet',
+
+    }]
 },{
     timestamps: true
 })

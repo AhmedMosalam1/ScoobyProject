@@ -4,10 +4,12 @@ const user=require('../Models/userModel')
 const petContrller = require('../controllers/petsController')
 const authcontroller=require('../controllers/authController')
 const router = express.Router();
+//router.post('/createplog',plogContrller.uploadPhoto,plogContrller.resizePhotoProject,plogContrller.createPlog)
 
-router.post('/addpet',authcontroller.protect,petContrller.setUserIds,petContrller.addpet)
+router.post('/addpet',authcontroller.protect,petContrller.uploadPhoto,petContrller.resizePhotoProject,petContrller.setUserIds,petContrller.addpet)
 
 router.get('/getallpets',petContrller.getpets)
+router.get('/getmypets',authcontroller.protect,petContrller.setUserIds,petContrller.getmypets)
 
 module.exports = router
 
