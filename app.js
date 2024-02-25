@@ -1,27 +1,53 @@
-const userRouter = require('./Routers/userRouter')
-const express = require('express')
-const bodyParser = require('body-parser')
+const express = require("express");
+const morgan = require("morgan");
+const cookieParser = require("cookie-parser")
+const bodyParser = require("body-parser")
+const passport = require('passport');
+//const express_session = require('express-session');
+require("dotenv").config();
+require('./config/passport-setup')
+
+//const helmet = require("helmet")
+
 const app = express();
+
+const appError = require("./utils/appError")
+const userRouter = require('./routes/authRoutes')
+const plogRouter=require('./routes/plogRout')
+const petRouter=require('./routes/petRoutes')
+
+///const err = require("./controllers/errorController")
+
+if (process.env.NODE_ENV === "development") {
+    app.use(morgan("dev"));
+}
+
 app.use(express.json());
-app.use(bodyParser.json())
+app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+// app.use(express_session({
+//   secret: process.env.SESSION_SECRECT,
+//   resave: false,
+//   saveUninitialized: true,
+// }));
+// app.use(passport.initialize());
+// app.use(passport.session());
+//app.use(express_session);
+app.use(cookieParser());
+app.use(bodyParser.json());
 
-app.use(express.urlencoded({ extended: false}));
-
-app.set('view engine', 'ejs')
-
-
-
+// Routers\
 
 app.use('/scooby/api/users',userRouter)
+app.use('/scooby/api/Plogs',plogRouter)
+app.use('/scooby/api/Pets',petRouter)
 
-app.all('*',(req,res,next)=>{
-    res.status(404).json({
-        status:'fail',
-        message: `can not find ${req.originalUrl} on this server !`    
-    })
+
+app.all('*', (req, res, next) => {
+  next(new appError(`Can't find ${req.originalUrl} on this server `, 404))
 })
 
-module.exports= app
-//nscc hkwx qaka rhmm
+//app.use(err)
 
+module.exports = app
 
