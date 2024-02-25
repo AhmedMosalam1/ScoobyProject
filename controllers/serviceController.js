@@ -1,74 +1,40 @@
-const Offer = require("../models/offerModels")
 const catchAsync = require('express-async-handler');
+const serviceModel = require('../models/serviceModel')
+const userModel = require('../models/userModel')
 const appError = require("../utils/appError")
+const jwt = require('jsonwebtoken')
+const nodemailer=require('nodemailer')
 const multer = require("multer")
 const cloudinary = require("../utils/cloud")
 const sharp = require("sharp")
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
-exports.deleteOne = catchAsync(async (req, res, next) => {
-    const id = req.params.id
-
-    const doc = await Offer.findById(id)
-
-    if (!doc) {
-        return next(new appError(`Can't find Offer on this id`, 404));
-    }
-
-    await doc.remove()
-
-    res.status(201).json({
-        status: "deleted success",
+//-------------------------------------------------------------create service
+exports.createService = catchAsync(async(req,res)=>{
+    const service = await serviceModel.create(req.body)
+    const user = await userModel.findById(req.params.id)
+    user.services_id.push(service.id)
+    await user.save();
+    res.status(200).json({
+        service
     })
+    
+})
+//-------------------------------------------------------------get all services
+exports.getAllServices = catchAsync(async(req,res)=>{
+    const allServices = await serviceModel.find()
+    res.status(200).json({
+        // image : allServices.serviceImage,
+        // type : allServices.serviceType ,
+        // rate: allServices.rate ,
+        // country : allServices.country ,
+        // price : allServices.price ,
+        allServices
+    })
+    
 })
 
-exports.deleteAll = catchAsync(async (req, res, next) => {
-    const id = req.params.id
-
-    await Offer.findByIdAndDelete(id)
-
-    res.status(201).json({
-        status: "Delete All Successfully",
-    })
-})
-
-exports.getOne = catchAsync(async (req, res, next) => {
-    const id = req.params.id
-
-    let doc = await Offer.findById(id)
-
-    if (!doc) {
-        return next(new appError(`Can't find Offer on this id`, 404));
-    }
-
-    res.status(201).json({
-        status: "success",
-        data: {
-            data: doc
-        }
-    })
-})
-
-exports.updateOne = catchAsync(async (req, res, next) => {
-
-    const doc = await Offer.findByIdAndUpdate(req.params.id, req.body, { new: true }) //new is true => to return new doc after update
-
-    if (!doc) {
-        return next(new appError(`Can't find Offer on this id`, 404));
-    }
-
-    doc.save()
-
-    res.status(201).json({
-        status: "success",
-        data: {
-            data: doc
-        }
-    })
-})
-
-
-
-
+//-------------------------------------------------------------upload images
 const multerStorage = multer.memoryStorage()
 
 const multerFilter = (req, file, cb) => {
@@ -94,7 +60,7 @@ const upload = multer({
     //     crop: 'fill',
     // });
 
-exports.uploadPhoto = upload.single('offerImage')
+exports.uploadPhoto = upload.single('serviceImage')
 
 exports.resizePhotoProject = catchAsync(async (req, res, next) => {
 
@@ -110,10 +76,10 @@ exports.resizePhotoProject = catchAsync(async (req, res, next) => {
     //     .jpeg({ quality: 90 })
     //     .toBuffer()
 
-    const filePath = `Scooby/Offers`
+    const filePath = `Scooby/services/services`
 
     const result = await uploadToClodinary(req.file.buffer, fileName, filePath)
-    req.body.offerImage = result.secure_url
+    req.body.serviceImage = result.secure_url
 
     next()
 })
@@ -137,25 +103,3 @@ const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
         uploadStream.end(buffer)
     })
 }
-
-
-exports.createOne = catchAsync(async (req, res, next) => {
-    const doc = await Offer.create(req.body)
-    res.status(201).json({
-        status: "success",
-        data: {
-            data: doc
-        }
-    })
-})
-
-exports.getAll = catchAsync(async (req, res) => {
-
-    const documents = await Offer.find();
-
-    res
-        .status(200)
-        .json({ results: documents.length, data: documents });
-});
-
-

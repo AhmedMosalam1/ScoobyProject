@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser")
 const bodyParser = require("body-parser")
 const passport = require('passport');
+
 //const express_session = require('express-session');
 require("dotenv").config();
 require('./config/passport-setup')
@@ -14,6 +15,9 @@ const app = express();
 const appError = require("./utils/appError")
 const userRouter = require('./routes/authRoutes')
 const offerRoutes = require("./routes/offerRoutes")
+const serviceRouter = require("./routes/serviceRoutes")
+const plogRouter = require("./routes/plogRout")
+const petRouter = require("./routes/petRoutes")
 
 //const err = require("./controllers/errorController")
 
@@ -43,6 +47,9 @@ app.use(bodyParser.json());
 // Routers
 app.use('/scooby/api/users',userRouter)
 app.use("/scooby/api/offer",offerRoutes)
+app.use('/scooby/api/services',serviceRouter)
+app.use('/scooby/api/Plogs',plogRouter)
+app.use('/scooby/api/Pets',petRouter)
 
 app.all('*', (req, res, next) => {
   next(new appError(`Can't find ${req.originalUrl} on this server `, 404))
