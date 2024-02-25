@@ -5,6 +5,21 @@ const jwt = require('jsonwebtoken')
 const nodemailer=require('nodemailer')
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
+const setServiceId=(req,res,next)=>{
+
+//Allow nested routes
+
+if(!req.body.service_id){
+
+    req.body.user=req.params.serviceId;
+
+   // console.log(req.body.tour)
+
+}
+
+next()
+}
+
 
 const createSendToken = (res, result, statusCode) => {
 
@@ -52,7 +67,7 @@ exports.login = catchAsync(async(req,res,next)=>{
         if(!email || !password){
             return next(new appError('please enter a valid email or password', 400))
         }
-        const result = await userModel.findOne({email})
+        const result = await userModel.findOne({email}).populate('services_id')
         
         if(!result || !(await result.correctPassword(password, result.password))){
             return next(new appError('Incorrect Email or Password', 401))

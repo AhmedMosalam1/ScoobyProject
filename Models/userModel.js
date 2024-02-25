@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const serviceModel = require('../Models/serviceModel')
 require('dotenv').config();
 
 const userSchema = new mongoose.Schema({
@@ -35,10 +36,23 @@ const userSchema = new mongoose.Schema({
     },
     profileImage:{
         type:String
-    }
+    },
+    services_id:[{
+        type:mongoose.Schema.ObjectId,
+        ref:"services"
+    }]
 },{
     timestamps: true
 })
+
+// userSchema.pre(/^find/,function(next){
+
+//     this.populate({
+//         path:'service_id',
+//         select:'-__v'
+//     });
+//     next()
+// })
 
 userSchema.pre('save',async function(next){
     if(!this.isModified('password')) {return next()}
