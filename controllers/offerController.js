@@ -67,6 +67,8 @@ exports.updateOne = catchAsync(async (req, res, next) => {
 })
 
 
+
+
 const multerStorage = multer.memoryStorage()
 
 const multerFilter = (req, file, cb) => {
@@ -82,32 +84,60 @@ const upload = multer({
     fileFilter: multerFilter
 })
 
+    // await sharp(req.files.projectImage[0].buffer)
+    //     .toFormat('jpeg')
+    //     .jpeg({ quality: 90 })
+    //     .toFile(`upload/project/${req.body.imageCover}`)
+
+    // const result1 = await cloudinary.uploader.upload(`upload/project/${req.body.imageCover}`, {
+    //     public_id: `${Date.now()}_Cover`,
+    //     crop: 'fill',
+    // });
+
 exports.uploadPhoto = upload.single('offerImage')
 
 exports.resizePhotoProject = catchAsync(async (req, res, next) => {
 
-    //console.log(req.file);
+    console.log(req.file);
 
     if (!req.file) return next()
-    console.log("object");
-
-    req.body.offerImage = `${req.file.originalname}`
 
 
-    const imageBuffer = await sharp(req.file.buffer)
-        .toFormat('jpeg')
-        .jpeg({ quality: 90 })
-        .toBuffer()
+    const fileName = `${req.file.originalname}`
+
+    // const imageBuffer = await sharp(req.file.buffer)
+    //     .toFormat('jpeg')
+    //     .jpeg({ quality: 90 })
+    //     .toBuffer()
 
     const filePath = `Scooby/Offers`
-    const fileName = req.body.offerImage
 
-    const result = await uploadToClodinary(imageBuffer, fileName, filePath)
-
-    req.body.offerImage = result.url
+    const result = await uploadToClodinary(req.file.buffer, fileName, filePath)
+   
+    req.body.offerImage = result.secure_url
 
     next()
 })
+
+
+const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
+    return new Promise((resolve, reject) => {
+        options.folder = folderPath;
+        options.public_id = filename;
+
+        const uploadStream = cloudinary.uploader.upload_stream(
+            options,
+            (error, result) => {
+                if (error) {
+                    reject(error)
+                } else {
+                    resolve(result)
+                }
+            }
+        )
+        uploadStream.end(buffer)
+    })
+}
 
 
 exports.createOne = catchAsync(async (req, res, next) => {
@@ -130,22 +160,3 @@ exports.getAll = catchAsync(async (req, res) => {
 });
 
 
-
-const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
-    return new Promise((resolve, reject) => {
-        options.folder = folderPath;
-
-        options.public_id = filename;
-        const uploadStream = cloudinary.uploader.upload_stream(
-            options,
-            (error, result) => {
-                if (error) {
-                    reject(error)
-                } else {
-                    resolve(result)
-                }
-            }
-        )
-        uploadStream.end(buffer)
-    })
-}

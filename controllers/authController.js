@@ -247,11 +247,7 @@ exports.sendforgotpasscode = catchAsync(async (req, res, next) => {
     `
     }
     try {
-        transporter.sendMail(mailOptions, function (err, success) {
-            if (err) {
-                console.log(err) //not usefull
-            }
-        })
+        transporter.sendMail(mailOptions)
     } catch (err) {
         user.passwordResetCode = undefined;
         user.passwordResetExpires = undefined;
@@ -276,7 +272,7 @@ exports.checkforgotpasscode = catchAsync(async (req, res, next) => {
 
     const user = await userModel.findOne({
         passwordResetCode: hashedResetCode,
-        passwordResetExpires: { $gt: Date.now() },
+        passwordResetExpires: { $gt: Date.now() }, //10:10 > 10:6 true    create 10:00
     });
 
     if (!user) {
@@ -316,6 +312,7 @@ exports.getresetpass = catchAsync(async (req, res, next) => {
     if (req.body.password !== req.body.confirmPassword) {
         return next(new appError('Password and confirmation password do not match', 400))
     }
+
     user.password = req.body.password
     user.passwordResetCode = undefined;
     user.passwordResetExpires = undefined;
