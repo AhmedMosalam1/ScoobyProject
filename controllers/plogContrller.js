@@ -1,5 +1,5 @@
 const catchAsync = require('express-async-handler');
-const plogModel = require('../models/plogModel')
+const plogModel = require('../Models/plogModel')
 const appError = require("../utils/appError")
 const multer = require("multer")
 const cloudinary = require("../utils/cloud")

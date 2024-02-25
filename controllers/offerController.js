@@ -1,4 +1,4 @@
-const Offer = require("../models/offerModels")
+const Offer = require("../Models/offerModels")
 const catchAsync = require('express-async-handler');
 const appError = require("../utils/appError")
 const multer = require("multer")
