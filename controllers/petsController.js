@@ -8,8 +8,8 @@ const sharp = require("sharp");
 
 exports.setUserIds = (req, res, next) => {
   if (!req.body.user) {
-    req.body.user = req.params.id; 
-    //req.user.id
+   // req.body.user = req.params.id; 
+    req.user.id = req.params.id
     // console.log(req.body.user)
   }
   next();
