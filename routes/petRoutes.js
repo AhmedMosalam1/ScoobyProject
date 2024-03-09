@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/addpet',petContrller.uploadPhoto,petContrller.resizePhotoProject,petContrller.setUserIds,petContrller.addpet)
 
 router.get('/getallpets',petContrller.getpets)
-router.get('/getmypets/:id',petContrller.setUserIds,petContrller.getmypets)
+router.get('/getmypets',petContrller.setUserIds,petContrller.getmypets)
 
 module.exports = router
 
