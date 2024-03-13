@@ -1,13 +1,13 @@
 const catchAsync = require('express-async-handler');
-const serviceModel = require('../models/serviceModel')
-const userModel = require('../models/userModel')
+const serviceModel = require('../Models/serviceModel')
+const userModel = require('../Models/userModel')
 const appError = require("../utils/appError")
 const jwt = require('jsonwebtoken')
 const nodemailer=require('nodemailer')
 const multer = require("multer")
 const cloudinary = require("../utils/cloud")
 const sharp = require("sharp")
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+//process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 //-------------------------------------------------------------create service
 exports.createService = catchAsync(async(req,res)=>{
@@ -24,11 +24,6 @@ exports.createService = catchAsync(async(req,res)=>{
 exports.getAllServices = catchAsync(async(req,res)=>{
     const allServices = await serviceModel.find()
     res.status(200).json({
-        // image : allServices.serviceImage,
-        // type : allServices.serviceType ,
-        // rate: allServices.rate ,
-        // country : allServices.country ,
-        // price : allServices.price ,
         allServices
     })
     
@@ -50,16 +45,6 @@ const upload = multer({
     fileFilter: multerFilter
 })
 
-    // await sharp(req.files.projectImage[0].buffer)
-    //     .toFormat('jpeg')
-    //     .jpeg({ quality: 90 })
-    //     .toFile(`upload/project/${req.body.imageCover}`)
-
-    // const result1 = await cloudinary.uploader.upload(`upload/project/${req.body.imageCover}`, {
-    //     public_id: `${Date.now()}_Cover`,
-    //     crop: 'fill',
-    // });
-
 exports.uploadPhoto = upload.single('serviceImage')
 
 exports.resizePhotoProject = catchAsync(async (req, res, next) => {
@@ -70,12 +55,6 @@ exports.resizePhotoProject = catchAsync(async (req, res, next) => {
 
 
     const fileName = `${req.file.originalname}`
-
-    // const imageBuffer = await sharp(req.file.buffer)
-    //     .toFormat('jpeg')
-    //     .jpeg({ quality: 90 })
-    //     .toBuffer()
-
     const filePath = `Scooby/services/services`
 
     const result = await uploadToClodinary(req.file.buffer, fileName, filePath)

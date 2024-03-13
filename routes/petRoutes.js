@@ -1,5 +1,5 @@
 const express = require('express')
-const user=require('../models/userModel')
+const user=require('../Models/userModel')
 //const {createPlog}=require('../controllers/plogContrller')
 const petContrller = require('../controllers/petsController')
 const authcontroller=require('../controllers/authController')

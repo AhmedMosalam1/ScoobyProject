@@ -1,6 +1,6 @@
 const catchAsync = require("express-async-handler");
-const petModel = require("../models/petsModel");
-const usermodel = require("../models/userModel");
+const petModel = require("../Models/petsModel");
+const usermodel = require("../Models/userModel");
 const appError = require("../utils/appError");
 const multer = require("multer");
 const cloudinary = require("../utils/cloud");
@@ -8,8 +8,7 @@ const sharp = require("sharp");
 
 exports.setUserIds = (req, res, next) => {
   if (!req.body.user) {
-    req.body.user = req.user.id;
-    // console.log(req.body.user)
+    req.body.user = req.user.id; 
   }
   next();
 };
