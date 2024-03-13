@@ -1,4 +1,4 @@
-const Vet = require("../models/vetModel") //error
+const Vet = require("../Models/vetModel") //error
 const catchAsync = require('express-async-handler');
 const appError = require("../utils/appError")
 const multer = require("multer")
