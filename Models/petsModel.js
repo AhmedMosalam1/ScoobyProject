@@ -90,6 +90,6 @@ petSchema.pre(/^find/,function(next){
     next()
 })
 
-const petModle = mongoose.model('pet',petSchema);
+const petModle = mongoose.model('pets',petSchema);
 
 module.exports = petModle

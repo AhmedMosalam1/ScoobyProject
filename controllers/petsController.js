@@ -13,7 +13,7 @@ exports.setUserIds = (req, res, next) => {
   }
   next();
 };
-
+//-------------------------------------------------------------upload pet image
 const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {
@@ -58,7 +58,6 @@ exports.resizePhotoProject = catchAsync(async (req, res, next) => {
 const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
   return new Promise((resolve, reject) => {
     options.folder = folderPath;
-
     options.public_id = filename;
     const uploadStream = cloudinary.uploader.upload_stream(
       options,
@@ -74,9 +73,9 @@ const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
   });
 };
 
+//-------------------------------------------------------------get user pits
 exports.getmypets = catchAsync(async (req, res, next) => {
   const pets = await petModel.find({ user: req.user.id });
-
   //console.log(pets)
   if (!pets) {
     return next(new appError(`cant find my pets`, 404));
@@ -86,7 +85,7 @@ exports.getmypets = catchAsync(async (req, res, next) => {
     data: pets,
   });
 });
-
+//-------------------------------------------------------------creat pit
 exports.addpet = catchAsync(async (req, res, next) => {
   const newpet = await petModel.create(req.body);
   const user = await usermodel.findById(req.user.id);
@@ -97,6 +96,7 @@ exports.addpet = catchAsync(async (req, res, next) => {
     data: newpet,
   });
 });
+//------------------------------------------------------------- get all pits
 exports.getpets = catchAsync(async (req, res, next) => {
   const pets = await petModel.find();
   //.populate({

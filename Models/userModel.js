@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         //minlength:[8,'Must at least 8 characters long'],
         //required:[true,'Please enter your password'],
-        //select : false
+        select : false
     },
     // confirmPassword:{
     //     type:String,
@@ -35,7 +35,25 @@ const userSchema = new mongoose.Schema({
     profileImage: {
         type: String,
         default: "https://res.cloudinary.com/dhddxcwcr/image/upload/v1700416252/6558f05c2841e64561ce75d1_Cover.jpg"
-    },
+    },pets:[{
+        type:mongoose.Schema.ObjectId,
+        ref:'pets',
+
+    }],
+    services_id:[{
+        type:mongoose.Schema.ObjectId,
+        ref:'services',
+
+    }],
+    followers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
+    }],
+      following: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
+         
+    }],
     passwordChangedAt: Date,
     passwordResetCode: String,
     passwordResetExpires: Date,
