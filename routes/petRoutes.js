@@ -6,10 +6,10 @@ const authcontroller=require('../controllers/authController')
 const router = express.Router();
 //router.post('/createplog',plogContrller.uploadPhoto,plogContrller.resizePhotoProject,plogContrller.createPlog)
 
-router.post('/addpet',authcontroller.protect,petContrller.uploadPhoto,petContrller.resizePhotoProject,petContrller.setUserIds,petContrller.addpet)
+router.post('/addpet/:id',petContrller.uploadPhoto,petContrller.resizePhotoProject,petContrller.setUserIds,petContrller.addpet)
 
 router.get('/getallpets',petContrller.getpets)
-router.get('/getmypets',authcontroller.protect,petContrller.setUserIds,petContrller.getmypets)
+router.get('/getmypets/:id',petContrller.getmypets)
 
 module.exports = router
 

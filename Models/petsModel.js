@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const User=require('../Models/userModel')
+const User=require('./userModel')
 const slugify=require('slugify')
 const _ = require('lodash')
 
@@ -11,12 +11,10 @@ const petSchema = new mongoose.Schema({
         type:String,
         //required:[true,'The name field must not be empty']
     },
-    petimage:{
+    petImage:{
         type:String,
         //required:[true,'The image field must not be empty']
      
-    },secure_url:{
-        type:String
     },
     type:{
         type:String,
@@ -24,7 +22,7 @@ const petSchema = new mongoose.Schema({
        
     },
     birthday:{
-        type:String,
+        type:Date,
        // required:[true,'The birthday field must not be empty ..(1 Novmber 2023)']
         
     },category:{
@@ -42,12 +40,12 @@ const petSchema = new mongoose.Schema({
         type:String,
         //required:[true,'The profileBio field must not be empty'] 
     },
-    weigth:{
+    weight:{
         type:Number,
         //required:[true,'The weight field must not be empty']
     },
     adoptionDay:{
-        type:String,
+        type:Date,
         //required:[true,'The birthday field must not be empty ..(1 Novmber 2023)']
     },size:{
         type:String,

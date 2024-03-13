@@ -4,21 +4,30 @@ const _ = require('lodash')
 
 require('dotenv').config();
 
-const plogSchema = new mongoose.Schema({
-    blogImage:{
+const doctorSchema = new mongoose.Schema({
+    name:{
         type:String,
        // required:[true,'The image field must not be empty']
      
     },
-    description:{
+    doctorImage:{
         type:String,
         //required:[true,'The image field must not be empty']
        
     },
-    link:{
+    description:{
         type:String,
        // required:[true,'The image field must not be empty']
         
+    },
+    rete:{
+        type:Number
+    },
+    nmberOfRate:{
+        type:Number
+    },
+    review:{
+        type:String
     }
     
 },
@@ -32,6 +41,6 @@ const plogSchema = new mongoose.Schema({
 
 
 
-const plogModle = mongoose.model('plog',plogSchema);
+const doctormodel = mongoose.model('doctor',doctorSchema);
 
-module.exports = plogModle  
+module.exports = doctormodel

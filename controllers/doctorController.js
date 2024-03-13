@@ -1,5 +1,5 @@
 const catchAsync = require('express-async-handler');
-const plogModel = require('../Models/plogModel')
+const doctormodel = require('../Models/doctorModel')
 const appError = require("../utils/appError")
 const multer = require("multer")
 const cloudinary = require("../utils/cloud")
@@ -21,7 +21,7 @@ const upload = multer({
     fileFilter: multerFilter
 })
 
-exports.uploadPhoto = upload.single('blogImage')
+exports.uploadPhoto = upload.single('doctorImage')
 
 
 exports.resizePhotoProject = catchAsync(async (req, res, next) => {
@@ -31,7 +31,7 @@ exports.resizePhotoProject = catchAsync(async (req, res, next) => {
     if (!req.file) return next()
     console.log("object");
 
-    req.body.blogImage= `${req.file.originalname}`
+    req.body.doctorImage= `${req.file.originalname}`
 
 
     const imageBuffer = await sharp(req.file.buffer)
@@ -39,13 +39,13 @@ exports.resizePhotoProject = catchAsync(async (req, res, next) => {
         .jpeg({ quality: 90 })
         .toBuffer()
 
-    const filePath = `Scooby/Plogs`
-    const fileName = req.body.blogImage
+    const filePath = `Scooby/Doctors`
+    const fileName = req.body.doctorImage
 
     const result = await uploadToClodinary(imageBuffer, fileName, filePath)
     //console.log(result)
 
-    req.body.blogImage = result.secure_url
+    req.body.doctorImage = result.secure_url
 
     next()
 })
@@ -55,33 +55,32 @@ exports.resizePhotoProject = catchAsync(async (req, res, next) => {
 
 
 
+//****************************************************************** */
+exports.createdoctor=catchAsync(async(req,res,next)=>{
 
-
-
-
-exports.createPlog=catchAsync(async(req,res,next)=>{
-
-    const newplog=await plogModel.create(req.body)
+    const newdoctor=await doctormodel.create(req.body)
     res.status(201).json({
         status:'success',
-        data:newplog
+        data:newdoctor
     })
 
 })
-exports.getplogs=catchAsync(async(req,res,next)=>{
+/************************************************************** */
+
+exports.getdoctors=catchAsync(async(req,res,next)=>{
 
    
 
-    const Plogs=await plogModel.find()   
- if(Plogs){
+    const doctors=await doctormodel.find()   
+ if(doctors){
     res.status(200).json({
         status:'success',
-          data:Plogs
+          data:doctors
       })
 
  }else{
    
-        return next(new appError ('plog should be exist', 401))
+        return next(new appError ('empty doctors', 401))
     
  }
     
@@ -91,6 +90,9 @@ exports.getplogs=catchAsync(async(req,res,next)=>{
     )
 
 
+
+
+/************************************************************************* */
     const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
         return new Promise((resolve, reject) => {
             options.folder = folderPath;
