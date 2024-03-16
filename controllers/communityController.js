@@ -9,11 +9,14 @@ const sharp = require("sharp")
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 //-------------------------------------------------------------add post
-exports.addPost = catchAsync(async(req,res)=>{
-    const userId = req.params.id
+exports.addPost = catchAsync(async(req,res,next)=>{
+    const userId = req.user._id
     const user = await userModel.findById(userId)
     const userImage = user.profileImage
     const userName = user.name
+    if(!user){
+        return next(new appError('You should login first'),401)
+    }
     const post = await communityModel.create({
         userId:userId,
         userImage:userImage,
@@ -29,32 +32,57 @@ exports.addPost = catchAsync(async(req,res)=>{
 })
 //-------------------------------------------------------------get all posts
 exports.getAllPosts = catchAsync(async(req,res)=>{
-    const allPosts = await communityModel.find({onlyMe:false})
+    const allPosts = await communityModel.find({onlyMe:false}).populate('likes_Id')
     res.status(200).json({
         allPosts
     })
     
 })
-//-------------------------------------------------------------add like
-exports.addLike = catchAsync(async(req,res)=>{
-    const postId = req.params.id
-    const post = await communityModel.findById(postId)
-    post.likes +=1 ;
-    post.save()
+//-------------------------------------------------------------delete post
+exports.deletePost = catchAsync(async(req,res)=>{
+    const post = req.params.id
+    if(!post){
+        return next(new appError('post not found',400))
+    }
+    await communityModel.findByIdAndDelete(req.params.id)
     res.status(200).json({
-        likes:post.likes
+        message:'post deleted successfully'
     })
-    
 })
-//-------------------------------------------------------------dis like
-exports.disLike = catchAsync(async(req,res)=>{
+//-------------------------------------------------------------edit post
+exports.editPost = catchAsync(async(req,res)=>{
     const postId = req.params.id
-    const post = await communityModel.findById(postId)
-    post.likes -=1 ;
+    const newDescription = req.body.description
+    //console.log(req.body.description)
+    const post = await communityModel.findByIdAndUpdate(postId,{
+        description:newDescription
+    })
     post.save()
     res.status(200).json({
-        likes:post.likes
+        post
     })
+})
+//-------------------------------------------------------------Like & disLike
+exports.likeAndDisLike = catchAsync(async(req,res,next)=>{
+    const currentUser = await userModel.findById(req.user._id)
+    const post = await communityModel.findById(req.params.id)
+    if(!currentUser){
+        return next(new appError('You should login first'),401)
+    }
+    const isLiked = post.likes_Id.includes(currentUser._id)
+    if(isLiked){
+        //disLike
+        await communityModel.findByIdAndUpdate(post._id, {$pull: { likes_Id:currentUser._id }})
+        await communityModel.findByIdAndUpdate(post._id, {$inc: { likesNumber:-1 }})
+        post.save()
+        res.status(200).json({post})
+    }else{
+        //like
+        await communityModel.findByIdAndUpdate(post._id, {$push: { likes_Id:currentUser._id }})
+        await communityModel.findByIdAndUpdate(post._id, {$inc: { likesNumber:1 }})
+        post.save()
+        res.status(200).json({post})
+    }
 })
 //-------------------------------------------------------------get my moments
 exports.getMyMoments = catchAsync(async(req,res)=>{

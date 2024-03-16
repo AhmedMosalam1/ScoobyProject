@@ -9,7 +9,7 @@ router.use(authController.protect)
 router.get('/getalluser',userController.getAll)
 router.delete('/deleteuser',userController.deleteAll)
 
-router.get("/getuser",userController.getOne)
+router.get("/getuser/:id",userController.getOne)
 router.patch("/updateuser/:id",userController.uploadPhoto,userController.resizePhotoProject,userController.updateOne)
 router.patch("/followunfollowuser/:id",userController.followUnFollowUser)
 router.delete('/deleteuser/:id',userController.deleteOne)

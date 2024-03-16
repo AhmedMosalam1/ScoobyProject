@@ -38,21 +38,18 @@ const userSchema = new mongoose.Schema({
     },pets:[{
         type:mongoose.Schema.ObjectId,
         ref:'pets',
-
     }],
     services_id:[{
         type:mongoose.Schema.ObjectId,
         ref:'services',
-
     }],
     followers: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     }],
-      following: [{
+    following: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
-         
     }],
     passwordChangedAt: Date,
     passwordResetCode: String,

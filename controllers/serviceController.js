@@ -33,51 +33,12 @@ exports.getAllServices = catchAsync(async(req,res)=>{
     })
     
 })
-//------------------------------------------------------------- filter - Pet Boarding
-exports.getPetBoarding = catchAsync(async(req,res)=>{
-    const PetBoarding = await serviceModel.find({serviceType:"Pet Boarding"})
+//------------------------------------------------------------- filters
+exports.getService = catchAsync(async(req,res)=>{
+    const serviceType = req.query.filter ;
+    const services = await serviceModel.find({serviceType:serviceType})
     res.status(200).json({
-        PetBoarding
-    })
-    
-})
-//-------------------------------------------------------------filter - Pet Hotel
-exports.getPetHotel = catchAsync(async(req,res)=>{
-    const petHotel = await serviceModel.find({serviceType:"Pet Hotel"})
-    res.status(200).json({
-        petHotel
-    })
-    
-})
-//-------------------------------------------------------------filter - Dog Walking
-exports.getDogWalking = catchAsync(async(req,res)=>{
-    const dogWalking = await serviceModel.find({serviceType:"Dog Walking"})
-    res.status(200).json({
-        dogWalking
-    })
-    
-})
-//-------------------------------------------------------------filter - Grooming
-exports.getGrooming = catchAsync(async(req,res)=>{
-    const grooming = await serviceModel.find({serviceType:"Grooming"})
-    res.status(200).json({
-        grooming
-    })
-    
-})
-//-------------------------------------------------------------filter - Pet Taxi
-exports.getPetTaxi = catchAsync(async(req,res)=>{
-    const petTaxi = await serviceModel.find({serviceType:"Pet Taxi"})
-    res.status(200).json({
-        petTaxi
-    })
-    
-})
-//-------------------------------------------------------------filter - Dog Training
-exports.getDogTraining = catchAsync(async(req,res)=>{
-    const dogTraining = await serviceModel.find({serviceType:"Dog Training"})
-    res.status(200).json({
-        dogTraining
+        services
     })
     
 })

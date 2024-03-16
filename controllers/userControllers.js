@@ -89,7 +89,7 @@ exports.getOne = catchAsync(async (req, res, next) => {
         filtObj= req.query.id
     }
     else{
-        filtObj = req.user.id
+        filtObj = req.params.id
     }
 
     let doc = await User.findById(filtObj).populate('pets').populate('services_id')

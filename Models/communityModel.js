@@ -21,10 +21,14 @@ const communitySchema = new mongoose.Schema({
     description:{
         type:String,
     },
-    likes:{
+    likesNumber:{
         type:Number,
         default:0
     },
+    likes_Id:[{
+        type:mongoose.Schema.ObjectId,
+        ref:'user',
+    }],
     onlyMe:{
         type: Boolean
     }
