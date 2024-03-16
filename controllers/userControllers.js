@@ -85,11 +85,11 @@ exports.deleteAll = catchAsync(async (req, res, next) => {
 exports.getOne = catchAsync(async (req, res, next) => {
     let filtObj
 
-    if(req.query.id){
-        filtObj= req.query.id
+    if(req.params.id){
+        filtObj= req.params.id
     }
     else{
-        filtObj = req.params.id
+        filtObj = req.user.id
     }
 
     let doc = await User.findById(filtObj).populate('pets').populate('services_id')
