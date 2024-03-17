@@ -7,7 +7,7 @@ const nodemailer=require('nodemailer')
 const multer = require("multer")
 const cloudinary = require("../utils/cloud")
 const sharp = require("sharp")
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+//process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 //-------------------------------------------------------------create service
 exports.createService = catchAsync(async(req,res)=>{
