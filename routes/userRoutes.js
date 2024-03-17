@@ -4,7 +4,7 @@ const router = express.Router();
 const userController = require('../controllers/userControllers')
 const authController = require("../controllers/authController")
 
-router.use(authController.protect)
+//router.use(authController.protect)
 
 router.get('/getalluser',userController.getAll)
 router.delete('/deleteuser',userController.deleteAll)
