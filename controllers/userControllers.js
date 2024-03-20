@@ -107,7 +107,7 @@ exports.getOne = catchAsync(async (req, res, next) => {
 
 exports.updateOne = catchAsync(async (req, res, next) => {
     if (req.body.password) {
-        const result = await User.findById(req.user.id).select('+password')
+        const result = await User.findById(req.params.id).select('+password')
 
         if (!(await result.correctPassword(req.body.passwordCurrent, result.password))) {
             return next(new appError("Your current password is incorrect", 401))
@@ -117,7 +117,7 @@ exports.updateOne = catchAsync(async (req, res, next) => {
     }
 
 
-    const doc = await User.findByIdAndUpdate(req.user.id, req.body, { new: true }) //new is true => to return new doc after update
+    const doc = await User.findByIdAndUpdate(req.params.id, req.body, { new: true }) //new is true => to return new doc after update
 
     if (!doc) {
         return next(new appError(`Can't find User on this id`, 404));
