@@ -5,7 +5,6 @@ const multer = require("multer")
 const cloudinary = require("../utils/cloud")
 const sharp = require("sharp")
 
-//------------------------------------------------------------- delete one offer
 exports.deleteOne = catchAsync(async (req, res, next) => {
     const id = req.params.id
 
@@ -21,7 +20,7 @@ exports.deleteOne = catchAsync(async (req, res, next) => {
         status: "deleted success",
     })
 })
-//------------------------------------------------------------- delete all offers
+
 exports.deleteAll = catchAsync(async (req, res, next) => {
     const id = req.params.id
 
@@ -31,7 +30,7 @@ exports.deleteAll = catchAsync(async (req, res, next) => {
         status: "Delete All Successfully",
     })
 })
-//------------------------------------------------------------- get offer
+
 exports.getOne = catchAsync(async (req, res, next) => {
     const id = req.params.id
 
@@ -48,7 +47,7 @@ exports.getOne = catchAsync(async (req, res, next) => {
         }
     })
 })
-//------------------------------------------------------------- update offer
+
 exports.updateOne = catchAsync(async (req, res, next) => {
 
     const doc = await Offer.findByIdAndUpdate(req.params.id, req.body, { new: true }) //new is true => to return new doc after update
@@ -66,7 +65,10 @@ exports.updateOne = catchAsync(async (req, res, next) => {
         }
     })
 })
-//------------------------------------------------------------- upload offer image
+
+
+
+
 const multerStorage = multer.memoryStorage()
 
 const multerFilter = (req, file, cb) => {
@@ -136,7 +138,7 @@ const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
     })
 }
 
-//------------------------------------------------------------- create offer
+
 exports.createOne = catchAsync(async (req, res, next) => {
     const doc = await Offer.create(req.body)
     res.status(201).json({
@@ -146,7 +148,7 @@ exports.createOne = catchAsync(async (req, res, next) => {
         }
     })
 })
-//------------------------------------------------------------- get all offers
+
 exports.getAll = catchAsync(async (req, res) => {
 
     const documents = await Offer.find();
