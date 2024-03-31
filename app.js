@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser")
 const bodyParser = require("body-parser")
 const passport = require('passport');
+const cors = require("cors")
 
 //const express_session = require('express-session');
 require("dotenv").config();
@@ -27,6 +28,9 @@ const err = require("./controllers/errorController")
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
 }
+
+app.use(cors())
+app.options('*',cors())
 
 app.use(express.json());
 app.use(express.json({ limit: '10kb' }));

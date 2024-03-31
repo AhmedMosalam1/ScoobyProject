@@ -88,9 +88,9 @@ exports.getmypets = catchAsync(async (req, res, next) => {
 //-------------------------------------------------------------creat pit
 exports.addpet = catchAsync(async (req, res, next) => {
   const newpet = await petModel.create(req.body);
-  const user = await usermodel.findById(req.user.id);
-  user.pets.push(newpet.id);
-  await user.save();
+  // const user = await usermodel.findById(req.user.id);
+  // user.pets.push(newpet.id);
+  // await user.save();
   res.status(201).json({
     status: "success",
     data: newpet,

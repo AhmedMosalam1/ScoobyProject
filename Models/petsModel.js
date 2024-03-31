@@ -84,8 +84,6 @@ petSchema.pre(/^find/,function(next){
     this.populate({
         path:'user',
         select:'-email -password -createdAt -updatedAt -__v'
-    
-    
     });
     next()
 })

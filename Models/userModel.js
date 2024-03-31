@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         //minlength:[8,'Must at least 8 characters long'],
         //required:[true,'Please enter your password'],
-        select : false
+        select: false
     },
     // confirmPassword:{
     //     type:String,
@@ -35,13 +35,19 @@ const userSchema = new mongoose.Schema({
     profileImage: {
         type: String,
         default: "https://res.cloudinary.com/dhddxcwcr/image/upload/v1700416252/6558f05c2841e64561ce75d1_Cover.jpg"
-    },pets:[{
-        type:mongoose.Schema.ObjectId,
-        ref:'pets',
-    }],
-    services_id:[{
-        type:mongoose.Schema.ObjectId,
-        ref:'services',
+    },
+    //pets:[{
+    //     type:mongoose.Schema.ObjectId,
+    //     ref:'pets',
+    // }],
+    role: {
+        type: String,
+        enum: ['user', 'doctor', 'employee'],
+        default: 'user',
+    },
+    services_id: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'services',
     }],
     followers: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -56,8 +62,18 @@ const userSchema = new mongoose.Schema({
     passwordResetExpires: Date,
     passwordResetVerified: Boolean
 }, {
-    timestamps: true
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+}, {
+    timestamps: true,
+
 })
+
+userSchema.virtual('pets', {
+    ref: 'pets',
+    foreignField: 'user',
+    localField: '_id'
+});
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) { return next() }
@@ -76,6 +92,8 @@ userSchema.methods.generateToken = function (id) {
     });
 }
 
-const userModel  = mongoose.model("user",userSchema)
+
+
+const userModel = mongoose.model("user", userSchema)
 
 module.exports = userModel
