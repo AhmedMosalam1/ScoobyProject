@@ -18,7 +18,6 @@ const doctorSchema = new mongoose.Schema({
     description:{
         type:String,
        // required:[true,'The image field must not be empty']
-        
     },
     rete:{
         type:Number

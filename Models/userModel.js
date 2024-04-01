@@ -45,10 +45,10 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'doctor', 'employee'],
         default: 'user',
     },
-    services_id: [{
-        type: mongoose.Schema.ObjectId,
-        ref: 'services',
-    }],
+    // services_id: [{
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: 'services',
+    // }],
     followers: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
@@ -92,7 +92,13 @@ userSchema.methods.generateToken = function (id) {
     });
 }
 
-
+userSchema.pre('save', function(next) {
+    if (this.role !== 'user') {
+        this.followers = undefined; // Exclude followers
+        this.following = undefined; // Exclude following
+    }
+    next();
+});
 
 const userModel = mongoose.model("user", userSchema)
 
