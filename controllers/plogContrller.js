@@ -21,7 +21,7 @@ const upload = multer({
     fileFilter: multerFilter
 })
 
-exports.uploadPhoto = upload.single('blogImage')
+exports.uploadPhoto = upload.single('plogImage')
 
 
 exports.resizePhotoProject = catchAsync(async (req, res, next) => {
@@ -31,7 +31,7 @@ exports.resizePhotoProject = catchAsync(async (req, res, next) => {
     if (!req.file) return next()
     console.log("object");
 
-    req.body.blogImage= `${req.file.originalname}`
+    req.body.plogImage= `${req.file.originalname}`
 
 
     const imageBuffer = await sharp(req.file.buffer)
@@ -39,13 +39,13 @@ exports.resizePhotoProject = catchAsync(async (req, res, next) => {
         .jpeg({ quality: 90 })
         .toBuffer()
 
-    const filePath = `Scooby/Plogs`
-    const fileName = req.body.blogImage
+    const filePath = `F:\Graduation\ScoobyPlogImage`
+    const fileName = req.body.plogImage
 
     const result = await uploadToClodinary(imageBuffer, fileName, filePath)
     //console.log(result)
 
-    req.body.blogImage = result.secure_url
+    req.body.plogImage = result.secure_url
 
     next()
 })

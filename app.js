@@ -13,14 +13,16 @@ require('./config/passport-setup')
 const app = express();
 
 const appError = require("./utils/appError")
-const userRouter = require('./routes/authRoutes')
+const authRouter = require('./routes/authRoutes')
+const userRoutes = require('./routes/userRoutes')
 const offerRoutes = require("./routes/offerRoutes")
 const serviceRouter = require("./routes/serviceRoutes")
 const plogRouter = require("./routes/plogRout")
 const petRouter = require("./routes/petRoutes")
-const doctorRouter=require('./routes/doctorsRouts')
-
-//const err = require("./controllers/errorController")
+const communityRouter = require("./routes/communityRoutes")
+const vetRouter = require("./routes/vetRoutes")
+const doctorRouter = require("./routes/doctorsRouts")
+const err = require("./controllers/errorController")
 
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
@@ -46,11 +48,14 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 
 // Routers
-app.use('/scooby/api/users',userRouter)
+app.use('/scooby/api/users',authRouter)
+app.use('/scooby/api/user',userRoutes)
 app.use("/scooby/api/offer",offerRoutes)
 app.use('/scooby/api/services',serviceRouter)
 app.use('/scooby/api/Plogs',plogRouter)
 app.use('/scooby/api/Pets',petRouter)
+app.use('/scooby/api/community',communityRouter)
+app.use('/scooby/api/vet',vetRouter)
 app.use('/sooby/api/doctors',doctorRouter)
 
 app.all('*', (req, res, next) => {

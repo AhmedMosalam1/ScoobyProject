@@ -33,7 +33,15 @@ exports.getAllServices = catchAsync(async(req,res)=>{
     })
     
 })
-
+//------------------------------------------------------------- filters
+exports.getService = catchAsync(async(req,res)=>{
+    const serviceType = req.query.filter ;
+    const services = await serviceModel.find({serviceType:serviceType})
+    res.status(200).json({
+        services
+    })
+    
+})
 //-------------------------------------------------------------upload images
 const multerStorage = multer.memoryStorage()
 
@@ -60,30 +68,60 @@ const upload = multer({
     //     crop: 'fill',
     // });
 
-exports.uploadPhoto = upload.single('serviceImage')
+exports.uploadPhoto1 = upload.single('serviceImage')
+//exports.uploadPhoto2 = upload.single('carImage')
+//exports.uploadPhoto3 = upload.single('licenseImage') // //      <-------
 
 exports.resizePhotoProject = catchAsync(async (req, res, next) => {
 
+    //----------------------------------------------------------------------------------------service image
     console.log(req.file);
-
     if (!req.file) return next()
 
-
-    const fileName = `${req.file.originalname}`
+    const fileName1 = `${req.file.originalname}` //
 
     // const imageBuffer = await sharp(req.file.buffer)
     //     .toFormat('jpeg')
     //     .jpeg({ quality: 90 })
     //     .toBuffer()
 
-    const filePath = `Scooby/services/services`
+    const filePath1 = `Scooby/services/services` // //     <-------
 
-    const result = await uploadToClodinary(req.file.buffer, fileName, filePath)
-    req.body.serviceImage = result.secure_url
+    const result1 = await uploadToClodinary(req.file.buffer, fileName1, filePath1) //
+    req.body.serviceImage = result1.secure_url // //      <-------
+    //----------------------------------------------------------------------------------------car image
+    // console.log(req.file);
+    // if (!req.file) return next()
+
+    // const fileName2 = `${req.file.originalname}` //
+
+    // // const imageBuffer = await sharp(req.file.buffer)
+    // //     .toFormat('jpeg')
+    // //     .jpeg({ quality: 90 })
+    // //     .toBuffer()
+
+    // const filePath2 = `Scooby/services/cars` // //     <-------
+
+    // const result2 = await uploadToClodinary(req.file.buffer, fileName2, filePath2) //
+    // req.body.carImage = result2.secure_url // // 
+    //----------------------------------------------------------------------------------------license image
+    // console.log(req.file);
+    // if (!req.file) return next()
+
+    // const fileName3 = `${req.file.originalname}` //
+
+    // // const imageBuffer = await sharp(req.file.buffer)
+    // //     .toFormat('jpeg')
+    // //     .jpeg({ quality: 90 })
+    // //     .toBuffer()
+
+    // const filePath3 = `Scooby/services/licenses` // //     <-------
+
+    // const result3 = await uploadToClodinary(req.file.buffer, fileName3, filePath3) //
+    // req.body.licenseImage = result3.secure_url // // 
 
     next()
 })
-
 
 const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
     return new Promise((resolve, reject) => {

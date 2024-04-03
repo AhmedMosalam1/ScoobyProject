@@ -1,13 +1,12 @@
 const catchAsync = require("express-async-handler");
-
 const userModel = require("../Models/userModel");
-const petmodel=require('../Models/petsModel')
 const appError = require("../utils/appError");
 const jwt = require("jsonwebtoken");
+const { promisify } = require('util')
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+//process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 const createSendToken = (res, result, statusCode) => {
   const token = result.generateToken(result._id);
@@ -54,11 +53,11 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!email || !password) {
     return next(new appError("please enter a valid email or password", 400));
   }
-  const result = await userModel.findOne({ email });
-
+  const result = await userModel.findOne({ email }).select("+password");
   if (!result || !(await result.correctPassword(password, result.password))) {
     return next(new appError("Incorrect Email or Password", 401));
   }
+
   createSendToken(res, result, 201);
 });
 
@@ -326,31 +325,29 @@ exports.getresetpass = catchAsync(async (req, res, next) => {
 });
 //--------------------------------------------------------------------------------------------
 
-exports.sendToken = catchAsync(async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return next(new appError("please enter a valid email or password", 400));
+exports.protect = catchAsync(async (req, res, next) => {
+  let token
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1]
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt
   }
-  const result = await userModel.findOne({ email });
+  if (!token) {
+    return next(new appError('you are not logged in! please log in to get access'), 401)
+  }
+  const accessToken = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
 
-  if (!result || !(await result.correctPassword(password, result.password))) {
-    return next(new appError("Incorrect Email or Password", 401));
+  const freshUser = await userModel.findById(accessToken.id)
+  if (!freshUser) {
+    return next(new appError("this user to this token not longer exists"), 401);
   }
-  createSendToken(res, result, 201);
-});
-//------------------------------------------------------------
-exports.getuser=catchAsync(async(req,res,next)=>{
-    
-      const id=req.params.id;
-      const tour=await userModel.findById(id).populate('pets').populate('services_id')
-          if(!tour){
-              return next(new appError(`cant find ${req.params.id} this user`,404))
-          }
-          res.status(200).json({
-              status:'success',
-              data:tour
-          })
-  }
-  )
 
-exports = createSendToken;
+  // if (freshUser.changePassword(accessToken.iat)) {
+  //   return next(new appError("User recently changed password! log in again", 401))
+  // }
+  req.user = freshUser
+  res.locals.user = freshUser;
+
+  next()
+})
+

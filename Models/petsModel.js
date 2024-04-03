@@ -18,6 +18,7 @@ const petSchema = new mongoose.Schema({
     },
     type:{
         type:String,
+        enum:['dog','cat']
        // required:[true,'The image field must not be empty']
        
     },
@@ -27,6 +28,7 @@ const petSchema = new mongoose.Schema({
         
     },category:{
         type:String,
+        
        // required:[true,'The category field must not be empty']
     },status:{
         type:String,
@@ -53,9 +55,21 @@ const petSchema = new mongoose.Schema({
     }
     ,owner:{
         type:String,
-        enum:['user','adoption'],
+        enum:['user','adoption','shelter'],
         //required:[true,'The adoption field must not be empty'] 
         default:'user'
+    },
+    shelter_id:{
+
+    },
+    shelterName:{
+        type:String
+    },
+    inShelter:{
+        type:Boolean
+    },
+    availableForAdoption:{
+        type:Boolean
     },
     user:{
         type:mongoose.Schema.ObjectId,

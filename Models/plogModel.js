@@ -5,12 +5,12 @@ const _ = require('lodash')
 require('dotenv').config();
 
 const plogSchema = new mongoose.Schema({
-    blogImage:{
+    plogImage:{
         type:String,
        // required:[true,'The image field must not be empty']
      
     },
-    description:{
+    discription:{
         type:String,
         //required:[true,'The image field must not be empty']
        
