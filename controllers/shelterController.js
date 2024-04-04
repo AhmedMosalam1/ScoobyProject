@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken')
 const multer = require("multer")
 const cloudinary = require("../utils/cloud")
 const sharp = require("sharp")
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+//process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 //-------------------------------------------------------------add shelter
 exports.addShelter = catchAsync(async(req,res,next)=>{
     req.body.locations.coordinates = req.body.locations.coordinates.split(',').map(coord => parseFloat(coord.trim()));
