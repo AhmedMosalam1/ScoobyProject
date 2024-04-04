@@ -5,15 +5,114 @@ const appError = require("../utils/appError");
 const multer = require("multer");
 const cloudinary = require("../utils/cloud");
 const sharp = require("sharp");
+const userModel = require("../Models/userModel");
+
+
+
+
+exports.filteradapt=catchAsync(async (req, res, next) => {
+  const pets = await petModel.find({
+    owner:'adoption'
+  });
+  //console.log(req.query)
+  
+
+  //console.log(pets)
+  if (!pets) {
+    return next(new appError(`cant find my pets`, 404));
+  }
+  res.status(200).json({
+    status: "success",
+    data: pets,
+  });
+});
+
+//************************************************************* */
+exports.filtertest=catchAsync(async (req, res, next) => {
+  const pets = await petModel.find(req.query);
+  //console.log(req.query)
+  
+
+  //console.log(pets)
+  if (!pets) {
+    return next(new appError(`cant find my pets`, 404));
+  }
+  res.status(200).json({
+    status: "success",
+    data: pets,
+  });
+});
+//****************************************************************/
+exports.filtercats=catchAsync(async (req, res, next) => {
+  const pets = await petModel.find({
+    type:'cat',
+    availableForAdoption:true,
+    //owner:'adoption'
+
+  });
+  //console.log(req.query)
+  
+
+  //console.log(pets)
+  if (!pets) {
+    return next(new appError(`cant find my pets`, 404));
+  }
+  res.status(200).json({
+    status: "success",
+    data: pets,
+  });
+});
+//************************************************************ */
+exports.filterdogs=catchAsync(async (req, res, next) => {
+  const pets = await petModel.find({
+    type:'dog',
+    availableForAdoption:true
+    //owner:'adoption'
+  });
+  //console.log(req.query)
+  
+
+  //console.log(pets)
+  if (!pets) {
+    return next(new appError(`cant find my pets`, 404));
+  }
+  res.status(200).json({
+    status: "success",
+    data: pets,
+  });
+});
+//*************************************************************** */
+exports.availableforadoption=catchAsync(async (req, res, next) => {
+  const pets = await petModel.find({
+    availableForAdoption:true,
+    //owner:'adoption'
+  });
+  //console.log(req.query)
+  
+
+  //console.log(pets)
+  if (!pets) {
+    return next(new appError(`cant find my pets`, 404));
+  }
+  res.status(200).json({
+    status: "success",
+    data: pets,
+  });
+});
+
+
+
+
 
 exports.setUserIds = (req, res, next) => {
   if (!req.body.user) {
-    req.body.user = req.user.id;
+    req.body.user = req.params.id; 
+    //req.user.id = req.params.id
     // console.log(req.body.user)
   }
   next();
 };
-//-------------------------------------------------------------upload pet image
+
 const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {
@@ -29,7 +128,7 @@ const upload = multer({
   fileFilter: multerFilter,
 });
 
-exports.uploadPhoto = upload.single("petimage");
+exports.uploadPhoto = upload.single("petImage");
 
 exports.resizePhotoProject = catchAsync(async (req, res, next) => {
   //console.log(req.file);
@@ -37,20 +136,20 @@ exports.resizePhotoProject = catchAsync(async (req, res, next) => {
   if (!req.file) return next();
   console.log("object");
 
-  req.body.petimage = `${req.file.originalname}`;
+  req.body.petImage = `${req.file.originalname}`;
 
   const imageBuffer = await sharp(req.file.buffer)
     .toFormat("jpeg")
     .jpeg({ quality: 90 })
     .toBuffer();
 
-  const filePath = `F:\Graduation\ScopyPetImage`;
-  const fileName = req.body.petimage;
+  const filePath = `Scooby/Pets`;
+  const fileName = req.body.petImage;
 
   const result = await uploadToClodinary(imageBuffer, fileName, filePath);
   //console.log(result)
 
-  req.body.petimage = result.secure_url;
+  req.body.petImage = result.secure_url;
 
   next();
 });
@@ -58,6 +157,7 @@ exports.resizePhotoProject = catchAsync(async (req, res, next) => {
 const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
   return new Promise((resolve, reject) => {
     options.folder = folderPath;
+
     options.public_id = filename;
     const uploadStream = cloudinary.uploader.upload_stream(
       options,
@@ -73,9 +173,9 @@ const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
   });
 };
 
-//-------------------------------------------------------------get user pits
 exports.getmypets = catchAsync(async (req, res, next) => {
-  const pets = await petModel.find({ user: req.user.id });
+  const pets = await petModel.find({ user: req.params.id });
+
   //console.log(pets)
   if (!pets) {
     return next(new appError(`cant find my pets`, 404));
@@ -85,20 +185,32 @@ exports.getmypets = catchAsync(async (req, res, next) => {
     data: pets,
   });
 });
-//-------------------------------------------------------------creat pit
-exports.addpet = catchAsync(async (req, res, next) => {
+
+exports.addpettouser = catchAsync(async (req, res, next) => {
   const newpet = await petModel.create(req.body);
-  // const user = await usermodel.findById(req.user.id);
-  // user.pets.push(newpet.id);
-  // await user.save();
+  const user = await usermodel.findById(req.params.id);
+  console.log(user)
+  user.pets.push(newpet.id);
+  
+  await user.save();
   res.status(201).json({
     status: "success",
     data: newpet,
   });
 });
-//------------------------------------------------------------- get all pits
+//********************************************************************* */
+exports.addpet = catchAsync(async (req, res, next) => {
+  const newpet = await petModel.create(req.body);
+  res.status(201).json({
+    status: "success",
+    data: newpet,
+  });
+});
+//*************************************************************** */
 exports.getpets = catchAsync(async (req, res, next) => {
-  const pets = await petModel.find();
+ 
+  const pets = await petModel.find()
+  
   //.populate({
   //         path:'user',
   //         select:'Name'
@@ -109,3 +221,7 @@ exports.getpets = catchAsync(async (req, res, next) => {
     data: pets,
   });
 });
+//*************************************************************** */
+
+
+

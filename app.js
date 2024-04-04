@@ -24,6 +24,8 @@ const communityRouter = require("./routes/communityRoutes")
 const vetRouter = require("./routes/vetRoutes")
 const doctorRouter = require("./routes/doctorsRouts")
 const productRouter = require("./routes/productRoutes")
+const shelterRouter = require("./routes/shelterRoutes")
+const AIRouter =require('./routes/AIRoutes')
 const err = require("./controllers/errorController")
 
 if (process.env.NODE_ENV === "development") {
@@ -63,6 +65,8 @@ app.use('/scooby/api/community',communityRouter)
 app.use('/scooby/api/vet',vetRouter)
 app.use('/scooby/api/doctors',doctorRouter)
 app.use('/scooby/api/product',productRouter)
+app.use('/scooby/api/shelters',shelterRouter)
+app.use('/scooby/api/AI',AIRouter)
 
 app.all('*', (req, res, next) => {
   next(new appError(`Can't find ${req.originalUrl} on this server `, 404))

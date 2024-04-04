@@ -11,22 +11,24 @@ const petSchema = new mongoose.Schema({
         type:String,
         //required:[true,'The name field must not be empty']
     },
-    petimage:{
+    petImage:{
         type:String,
         //required:[true,'The image field must not be empty']
      
     },
     type:{
         type:String,
+        enum:['dog','cat']
        // required:[true,'The image field must not be empty']
        
     },
     birthday:{
-        type:String,
+        type:Date,
        // required:[true,'The birthday field must not be empty ..(1 Novmber 2023)']
         
     },category:{
         type:String,
+        
        // required:[true,'The category field must not be empty']
     },status:{
         type:String,
@@ -40,12 +42,12 @@ const petSchema = new mongoose.Schema({
         type:String,
         //required:[true,'The profileBio field must not be empty'] 
     },
-    weigth:{
+    weight:{
         type:Number,
         //required:[true,'The weight field must not be empty']
     },
     adoptionDay:{
-        type:String,
+        type:Date,
         //required:[true,'The birthday field must not be empty ..(1 Novmber 2023)']
     },size:{
         type:String,
@@ -53,9 +55,21 @@ const petSchema = new mongoose.Schema({
     }
     ,owner:{
         type:String,
-        enum:['user','adoption'],
+        enum:['user','adoption','shelter'],
         //required:[true,'The adoption field must not be empty'] 
         default:'user'
+    },
+    shelter_id:{
+
+    },
+    shelterName:{
+        type:String
+    },
+    inShelter:{
+        type:Boolean
+    },
+    availableForAdoption:{
+        type:Boolean
     },
     user:{
         type:mongoose.Schema.ObjectId,
@@ -79,15 +93,17 @@ const petSchema = new mongoose.Schema({
 
 
 
-// petSchema.pre(/^find/,function(next){
+petSchema.pre(/^find/,function(next){
 
-//     this.populate({
-//         path:'user',
-//         select:'-email -password -createdAt -updatedAt -__v'
-//     });
-//     next()
-// })
+    this.populate({
+        path:'user',
+        select:'-email -password -createdAt -updatedAt -__v'
+    
+    
+    });
+    next()
+})
 
-const petModle = mongoose.model('pets',petSchema);
+const petModle = mongoose.model('pet',petSchema);
 
 module.exports = petModle
