@@ -41,7 +41,7 @@ const shelterSchema = new mongoose.Schema({
     },
     pets_Id:[{
         type:mongoose.Schema.ObjectId,
-        ref:'pets',
+        ref:'pet',
     }],
 },{
     timestamps: true,
