@@ -187,10 +187,11 @@ exports.getmypets = catchAsync(async (req, res, next) => {
 });
 
 exports.addpettouser = catchAsync(async (req, res, next) => {
+  req.body.user = req.params.id
   const newpet = await petModel.create(req.body);
-  const user = await usermodel.findById(req.params.id);
-  console.log(user)
-  user.pets.push(newpet.id);
+  // const user = await usermodel.findById(req.params.id);
+  // console.log(user)
+  // user.pets.push(newpet.id);
   
   await user.save();
   res.status(201).json({
