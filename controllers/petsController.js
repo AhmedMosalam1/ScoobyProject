@@ -192,8 +192,7 @@ exports.addpettouser = catchAsync(async (req, res, next) => {
   // const user = await usermodel.findById(req.params.id);
   // console.log(user)
   // user.pets.push(newpet.id);
-  
-  await user.save();
+  //await user.save();
   res.status(201).json({
     status: "success",
     data: newpet,
