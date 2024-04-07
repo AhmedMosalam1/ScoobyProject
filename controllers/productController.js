@@ -180,8 +180,8 @@ exports.getProductBySearch = catchAsync(async (req, res) => {
 
     const documents = await Product.find({
         $or: [
-            { name: { $regex: req.body.search, $options: 'i' } },
-            { desc: { $regex: req.body.search, $options: 'i' } }
+            { name: { $regex: req.query.search, $options: 'i' } },
+            { desc: { $regex: req.query.search, $options: 'i' } }
         ]
     });    
 
