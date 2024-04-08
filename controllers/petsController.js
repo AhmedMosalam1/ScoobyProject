@@ -5,7 +5,7 @@ const appError = require("../utils/appError");
 const multer = require("multer");
 const cloudinary = require("../utils/cloud");
 const sharp = require("sharp");
-const userModel = require("../Models/userModel");
+//const userModel = require("../Models/userModel");
 
 
 exports.setUserIds = (req, res, next) => {
@@ -215,7 +215,7 @@ exports.getmypets = catchAsync(async (req, res, next) => {
 exports.addpettouser = catchAsync(async (req, res, next) => {
   const newpet = await petModel.create(req.body);
   const user = await usermodel.findById(req.params.id);
-  console.log(user)
+  //console.log(user)
   user.pets.push(newpet.id);
   
   await user.save();

@@ -6,13 +6,13 @@ const AuthController=require('../controllers/authController')
 //merge parameters
 const router=express.Router({mergeParams:true})
 
-router.use(AuthController.protect)
+//router.use(AuthController.protect)
 
 
 router.get('/getAllReview/:id',reviewController.getAllReview)
-router.post('/createReview/:id',reviewController.setServiceUserIds,reviewController.createReview)
-router.delete('/deleteReview/:id',reviewController.setServiceUserIds,reviewController.deleteReview)
-router.patch('/updateReview/:id',reviewController.updateReview)
+router.post('/createReview/:id',AuthController.protect,reviewController.setServiceUserIds,reviewController.createReview)
+router.delete('/deleteReview/:id',AuthController.protect,reviewController.setServiceUserIds,reviewController.deleteReview)
+router.patch('/updateReview/:id',AuthController.protect,reviewController.updateReview)
 
 
 module.exports=router

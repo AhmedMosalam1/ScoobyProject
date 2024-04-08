@@ -45,10 +45,17 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'doctor', 'employee'],
         default: 'user',
     },
+    pets:[{
+        type: mongoose.Schema.Types.ObjectId,
+            ref: 'pets'
+    }
+    
+    ]
     // services_id: [{
     //     type: mongoose.Schema.ObjectId,
     //     ref: 'services',
-    // }],
+    // }]
+    ,
     followers: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
@@ -61,7 +68,7 @@ const userSchema = new mongoose.Schema({
     passwordResetCode: String,
     passwordResetExpires: Date,
     passwordResetVerified: Boolean
-}, {
+},{
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
 }, {
