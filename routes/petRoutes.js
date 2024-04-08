@@ -7,6 +7,8 @@ const router = express.Router();
 //router.post('/createplog',plogContrller.uploadPhoto,plogContrller.resizePhotoProject,plogContrller.createPlog)
 
 router.post('/addpet/:id',petContrller.uploadPhoto,petContrller.resizePhotoProject,petContrller.setUserIds,petContrller.addpettouser)
+router.post('/addpet-shelter/:id',petContrller.uploadPhoto,petContrller.resizePhotoProject,petContrller.setshelterIds,petContrller.addpettoshelter)
+
 router.post('/addpet',petContrller.uploadPhoto,petContrller.resizePhotoProject,petContrller.setUserIds,petContrller.addpet)
 router.get('/get-top-collection',petContrller.filteradapt)
 router.get('/getcats',petContrller.filtercats)
@@ -16,6 +18,8 @@ router.get('/filtertest',petContrller.filtertest)
 
 router.get('/getallpets',petContrller.getpets)
 router.get('/getmypets/:id',petContrller.getmypets)
-router.get('/missing',petContrller.missing)
+router.patch('/updateMyPet/:id',petContrller.uploadPhoto,petContrller.resizePhotoProject,petContrller.updatepet)
+router.delete('/deletePet/:id',petContrller.deletepet)
+
 
 module.exports = router

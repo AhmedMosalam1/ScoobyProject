@@ -6,17 +6,7 @@ const jwt = require('jsonwebtoken')
 const multer = require("multer")
 const cloudinary = require("../utils/cloud")
 const sharp = require("sharp")
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
-
-
-exports.setUserIds = (req, res, next) => {
-    
-      //req.body.user = req.params.id; 
-      //req.body = req.params.id
-      // console.log(req.body.user)
-    
-    next();
-  };
+//process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 //-------------------------------------------------------------add post
 exports.addPost = catchAsync(async(req,res,next)=>{
@@ -60,19 +50,18 @@ exports.deletePost = catchAsync(async(req,res)=>{
     })
 })
 //-------------------------------------------------------------edit post
-exports.editPost = catchAsync(async(req,res,next)=>{
+exports.editPost = catchAsync(async(req,res)=>{
     const postId = req.params.id
     const newDescription = req.body.description
-    console.log(req.body)
+    //console.log(req.body.description)
     const post = await communityModel.findByIdAndUpdate(postId,{
         description:newDescription
-    },{new:true})
+    })
     post.save()
     res.status(200).json({
         post
     })
-    next()}
-)
+})
 //-------------------------------------------------------------Like & disLike
 exports.likeAndDisLike = catchAsync(async(req,res,next)=>{
     const currentUser = await userModel.findById(req.user._id)

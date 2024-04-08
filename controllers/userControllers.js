@@ -56,6 +56,13 @@ const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
     })
 }
 
+exports.setUserIds = (req, res, next) => {
+    if (!req.params.id) {
+        req.params.id = req.user.id;
+        // console.log(req.body.user)
+    }
+    next();
+};
 
 exports.deleteOne = catchAsync(async (req, res, next) => {
     const id = req.params.id
@@ -83,16 +90,8 @@ exports.deleteAll = catchAsync(async (req, res, next) => {
 })
 
 exports.getOne = catchAsync(async (req, res, next) => {
-    let filtObj
 
-    if(req.params.id){
-        filtObj= req.params.id
-    }
-    else{
-        filtObj = req.user.id
-    }
-
-    let doc = await User.findById(filtObj).populate('pets').populate('services_id')
+    let doc = await User.findById(req.params.id).populate('pet')//.populate('services_id')
 
     if (!doc) {
         return next(new appError(`Can't find User on this id`, 404));
@@ -108,7 +107,7 @@ exports.getOne = catchAsync(async (req, res, next) => {
 
 exports.updateOne = catchAsync(async (req, res, next) => {
     if (req.body.password) {
-        const result = await User.findById(req.user.id).select('+password')
+        const result = await User.findById(req.params.id).select('+password')
 
         if (!(await result.correctPassword(req.body.passwordCurrent, result.password))) {
             return next(new appError("Your current password is incorrect", 401))
@@ -118,13 +117,13 @@ exports.updateOne = catchAsync(async (req, res, next) => {
     }
 
 
-    const doc = await User.findByIdAndUpdate(req.user.id, req.body, { new: true }) //new is true => to return new doc after update
+    const doc = await User.findByIdAndUpdate(req.params.id, req.body, { new: true }) //new is true => to return new doc after update
 
     if (!doc) {
         return next(new appError(`Can't find User on this id`, 404));
     }
 
-   // doc.save()
+    // doc.save()
 
     res.status(201).json({
         status: "success",
@@ -144,29 +143,29 @@ exports.getAll = catchAsync(async (req, res) => {
         .json({ results: documents.length, data: documents });
 });
 
-exports.followUnFollowUser = catchAsync(async (req, res,next) => {
-   
-      const { id } = req.params;
-      const userToModify = await User.findById(id);
-      const currentUser = await User.findById(req.user._id);
-  
-      if (id === req.user._id.toString())
-      return next(new appError(`You cannot follow/unfollow yourself`, 400));
-  
-      if (!userToModify || !currentUser)
-      return next(new appError(`User Not Found`, 400));
-  
-      const isFollowing = currentUser.following.includes(id);
-  
-      if (isFollowing) {
+exports.followUnFollowUser = catchAsync(async (req, res, next) => {
+
+    const { id } = req.params;
+    const userToModify = await User.findById(id);
+    const currentUser = await User.findById(req.user._id);
+
+    if (id === req.user._id.toString())
+        return next(new appError(`You cannot follow/unfollow yourself`, 400));
+
+    if (!userToModify || !currentUser)
+        return next(new appError(`User Not Found`, 400));
+
+    const isFollowing = currentUser.following.includes(id);
+
+    if (isFollowing) {
         // Unfollow user
-        await User.findByIdAndUpdate(id, { $pull: { followers: req.user._id } , });
+        await User.findByIdAndUpdate(id, { $pull: { followers: req.user._id }, });
         await User.findByIdAndUpdate(req.user._id, { $pull: { following: id } });
         res.status(200).json({ message: "User unfollowed successfully" });
-      } else {
+    } else {
         // Follow user
         await User.findByIdAndUpdate(id, { $push: { followers: req.user._id } });
         await User.findByIdAndUpdate(req.user._id, { $push: { following: id } });
         res.status(200).json({ message: "User followed successfully" });
-      }
+    }
 });

@@ -16,6 +16,10 @@ const offerSchema = new mongoose.Schema({
     },
     offerImage: {
         type: String,
+    },
+    type:{
+        type :String,
+        enum:["medicine","product","service"]
     }
 }, {
     timestamps: true

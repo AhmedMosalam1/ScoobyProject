@@ -4,29 +4,22 @@ const _ = require('lodash')
 
 require('dotenv').config();
 
-const doctorSchema = new mongoose.Schema({
-    name:{
+const foundedSchema = new mongoose.Schema({
+    petImage:{
         type:String,
        // required:[true,'The image field must not be empty']
      
     },
-    doctorImage:{
-        type:String,
-        //required:[true,'The image field must not be empty']
-       
-    },
     description:{
         type:String,
+        //required:[true,'The discription field must not be empty']
+       
+    },
+    userId:{
+        type:mongoose.Schema.ObjectId,
+        ref:'user',
        // required:[true,'The image field must not be empty']
-    },
-    rete:{
-        type:Number
-    },
-    nmberOfRate:{
-        type:Number
-    },
-    review:{
-        type:String
+        
     }
     
 },
@@ -40,6 +33,6 @@ const doctorSchema = new mongoose.Schema({
 
 
 
-const doctormodel = mongoose.model('doctor',doctorSchema);
+const foundedModel = mongoose.model('found',foundedSchema);
 
-module.exports = doctormodel
+module.exports = foundedModel 
