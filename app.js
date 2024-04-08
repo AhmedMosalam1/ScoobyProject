@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser")
 const bodyParser = require("body-parser")
 const passport = require('passport');
+const cors = require("cors")
 
 //const express_session = require('express-session');
 require("dotenv").config();
@@ -19,13 +20,23 @@ const offerRoutes = require("./routes/offerRoutes")
 const serviceRouter = require("./routes/serviceRoutes")
 const plogRouter = require("./routes/plogRout")
 const petRouter = require("./routes/petRoutes")
+const communityRouter = require("./routes/communityRoutes")
 const vetRouter = require("./routes/vetRoutes")
-
+const doctorRouter = require("./routes/doctorsRouts")
+const productRouter = require("./routes/productRoutes")
+const shelterRouter = require("./routes/shelterRoutes")
+const favRoutes = require("./routes/favListRoutes")
+const couponRoutes = require("./routes/couponRoutes")
+const cartRoutes = require("./routes/cartRoutes")
+const AIRouter =require('./routes/AIRoutes')
 const err = require("./controllers/errorController")
 
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
 }
+
+app.use(cors())
+app.options('*',cors())
 
 app.use(express.json());
 app.use(express.json({ limit: '10kb' }));
@@ -53,7 +64,15 @@ app.use("/scooby/api/offer",offerRoutes)
 app.use('/scooby/api/services',serviceRouter)
 app.use('/scooby/api/Plogs',plogRouter)
 app.use('/scooby/api/Pets',petRouter)
+app.use('/scooby/api/community',communityRouter)
 app.use('/scooby/api/vet',vetRouter)
+app.use('/scooby/api/doctors',doctorRouter)
+app.use('/scooby/api/product',productRouter)
+app.use('/scooby/api/shelters',shelterRouter)
+app.use('/scooby/api/fav',favRoutes)
+app.use('/scooby/api/coupon',couponRoutes)
+app.use('/scooby/api/cart',cartRoutes)
+app.use('/scooby/api/AI',AIRouter)
 
 app.all('*', (req, res, next) => {
   next(new appError(`Can't find ${req.originalUrl} on this server `, 404))

@@ -29,13 +29,13 @@ mongoose
     });
 
 
-process.on('unhandledRejection', err => {
-    console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
-    console.log(err.name, err.message);
-    server.close(() => {
-        process.exit(1)
-    })
-})
+// process.on('unhandledRejection', err => {
+//     console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
+//     console.log(err.name, err.message);
+//     server.close(() => {
+//         process.exit(1)
+//     })
+// })
 
 
 

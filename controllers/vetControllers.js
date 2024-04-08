@@ -116,7 +116,7 @@ exports.getOne = catchAsync(async (req, res, next) => {
 
 exports.updateOne = catchAsync(async (req, res, next) => {
     
-    const doc = await Vet.findByIdAndUpdate(req.user.id, req.body, { new: true }) //new is true => to return new doc after update
+    const doc = await Vet.findByIdAndUpdate(req.params.id, req.body, { new: true }) //new is true => to return new doc after update
 
     if (!doc) {
         return next(new appError(`Can't find Vet on this id`, 404));
@@ -134,12 +134,13 @@ exports.updateOne = catchAsync(async (req, res, next) => {
 
 
 exports.getAll = catchAsync(async (req, res) => {
-
+   
     const documents = await Vet.find();
 
     res
         .status(200)
         .json({ results: documents.length, data: documents });
+    
 });
 
 
