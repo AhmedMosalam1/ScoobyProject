@@ -59,15 +59,6 @@ const petSchema = new mongoose.Schema({
         //required:[true,'The adoption field must not be empty'] 
         default:'user'
     },
-    // shelter_id:{
-
-    // },
-    // shelterName:{
-    //     type:String
-    // },
-    // inShelter:{
-    //     type:Boolean
-    // },
         shelterInfo:{
         type:mongoose.Schema.ObjectId,
         ref:'shelter',
