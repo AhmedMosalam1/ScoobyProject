@@ -25,8 +25,14 @@ const vetRouter = require("./routes/vetRoutes")
 const doctorRouter = require("./routes/doctorsRouts")
 const productRouter = require("./routes/productRoutes")
 const shelterRouter = require("./routes/shelterRoutes")
+const requestRouter =require('./routes/requestRoutes')
 const AIRouter =require('./routes/AIRoutes')
 const err = require("./controllers/errorController")
+const reviewRouter=require("./routes/reviewRouts")
+const foundedRouters=require('./routes/foundedRoutes')
+const favRoutes = require("./routes/favListRoutes")
+const couponRoutes = require("./routes/couponRoutes")
+const cartRoutes = require("./routes/cartRoutes")
 
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
@@ -67,6 +73,13 @@ app.use('/scooby/api/doctors',doctorRouter)
 app.use('/scooby/api/product',productRouter)
 app.use('/scooby/api/shelters',shelterRouter)
 app.use('/scooby/api/AI',AIRouter)
+app.use('/scooby/api/request',requestRouter)
+app.use('/scooby/api/reviews',reviewRouter)
+app.use('/scooby/api/founded',foundedRouters)
+app.use('/scooby/api/fav',favRoutes)
+app.use('/scooby/api/coupon',couponRoutes)
+app.use('/scooby/api/cart',cartRoutes)
+
 
 app.all('*', (req, res, next) => {
   next(new appError(`Can't find ${req.originalUrl} on this server `, 404))

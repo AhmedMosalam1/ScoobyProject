@@ -57,6 +57,23 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     }],
+    phoneNumber:{
+        type:String
+    },
+    favPet:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'pets'
+    }],
+    favPetsNumber:{
+        type:Number
+    },
+    favProduct:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'product'
+    }],
+    favProductsNumber:{
+        type:Number
+    },
     passwordChangedAt: Date,
     passwordResetCode: String,
     passwordResetExpires: Date,

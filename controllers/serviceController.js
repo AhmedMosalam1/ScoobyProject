@@ -35,8 +35,14 @@ exports.getAllServices = catchAsync(async(req,res)=>{
 })
 //------------------------------------------------------------- filters
 exports.getService = catchAsync(async(req,res)=>{
-    const serviceType = req.query.filter ;
-    const services = await serviceModel.find({serviceType:serviceType})
+    const serviceType = req.query.serviceType ;
+    const location = req.query.location
+    let services
+    if(location){
+        services = await serviceModel.find({serviceType:serviceType , city:location})
+    }else{
+        services = await serviceModel.find({serviceType:serviceType})
+    }
     res.status(200).json({
         services
     })
