@@ -11,8 +11,8 @@ const router=express.Router({mergeParams:true})
 
 router.get('/getAllReview/:id',reviewController.getAllReview)
 router.post('/createReview/:id',AuthController.protect,reviewController.setServiceUserIds,reviewController.createReview)
-router.delete('/deleteReview/:id',AuthController.protect,reviewController.setServiceUserIds,reviewController.deleteReview)
-router.patch('/updateReview/:id',AuthController.protect,reviewController.updateReview)
+router.delete('/deleteReview/:id',reviewController.deleteReview)
+router.patch('/updateReview/:id',reviewController.updateReview)
 
 
 module.exports=router
