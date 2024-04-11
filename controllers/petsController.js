@@ -258,7 +258,7 @@ exports.addpet = catchAsync(async (req, res, next) => {
 //*************************************************************** */
 exports.getpets = catchAsync(async (req, res, next) => {
  
-  const pets = await petModel.find()
+  const pets = await petModel.find().populate('user')
   
   //.populate({
   //         path:'user',
