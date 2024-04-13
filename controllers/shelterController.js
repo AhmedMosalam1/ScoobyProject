@@ -25,7 +25,7 @@ exports.getAllShelters = catchAsync(async(req,res,next)=>{
 })
 //------------------------------------------------------------- pets in shelters
 exports.petsInShelters = catchAsync(async(req,res,next)=>{
-    const petsInShelters = await petsModel.find({owner:'shelter'}).populate('shelterInfo')
+    const petsInShelters = await petsModel.find({owner:'shelter'})
     res.status(200).json({
         petsInShelters
     })
