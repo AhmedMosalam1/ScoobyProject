@@ -44,6 +44,9 @@ const serviceSchema = new mongoose.Schema({
     },
     phone:{
         type: Number
+    },
+    description:{
+        type:String
     }
 },{
     timestamps: true,
