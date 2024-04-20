@@ -42,7 +42,7 @@ exports.addProductToCart = catchAsync(async (req, res, next) => {
 
 
   exports.getCart = catchAsync(async (req, res, next) => {
-    const cart = await Cart.findOne({ user: req.params.id });
+    const cart = await Cart.findOne({ user: req.params.id }).populate('cartItems.product');
   
     if (!cart) {
       return next(
