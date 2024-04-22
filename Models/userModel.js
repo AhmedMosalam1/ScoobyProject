@@ -36,26 +36,19 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "https://res.cloudinary.com/dhddxcwcr/image/upload/v1700416252/6558f05c2841e64561ce75d1_Cover.jpg"
     },
-    //pets:[{
-    //     type:mongoose.Schema.ObjectId,
-    //     ref:'pets',
-    // }],
+    pets:[{
+        type:mongoose.Schema.ObjectId,
+        ref:'pets',
+    }],
     role: {
         type: String,
         enum: ['user', 'doctor', 'employee'],
         default: 'user',
     },
-    pets:[{
-        type: mongoose.Schema.Types.ObjectId,
-            ref: 'pets'
-    }
-    
-    ]
-    // services_id: [{
-    //     type: mongoose.Schema.ObjectId,
-    //     ref: 'services',
-    // }]
-    ,
+    services_id: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'services',
+    }],
     followers: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
@@ -64,11 +57,28 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     }],
+    phoneNumber:{
+        type:String
+    },
+    favPet:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'pets'
+    }],
+    favPetsNumber:{
+        type:Number
+    },
+    favProduct:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'product'
+    }],
+    favProductsNumber:{
+        type:Number
+    },
     passwordChangedAt: Date,
     passwordResetCode: String,
     passwordResetExpires: Date,
     passwordResetVerified: Boolean
-},{
+}, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
 }, {

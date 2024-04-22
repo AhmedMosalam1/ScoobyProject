@@ -7,13 +7,11 @@ require('dotenv').config();
 const foundedSchema = new mongoose.Schema({
     petImage:{
         type:String,
-       // required:[true,'The image field must not be empty']
-     
+       // required:[true,'The image field must not be empty'] 
     },
     description:{
         type:String,
-        //required:[true,'The discription field must not be empty']
-       
+        //required:[true,'The discription field must not be empty'] 
     },
     userId:{
         type:mongoose.Schema.ObjectId,

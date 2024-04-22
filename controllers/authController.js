@@ -5,8 +5,75 @@ const jwt = require("jsonwebtoken");
 const { promisify } = require('util')
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
+const multer = require("multer");
+const cloudinary = require("../utils/cloud");
+const sharp = require("sharp");
 
 //process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+
+
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("image")) {
+    cb(null, true);
+  } else {
+    cb(new appError("not an image ! please upload only images..", 400), false);
+  }
+};
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+exports.uploadPhoto = upload.single("profileImage");
+
+exports.resizePhotoProject = catchAsync(async (req, res, next) => {
+  //console.log(req.file);
+
+  if (!req.file) return next();
+  console.log("object");
+
+  req.body.profileImage = `${req.file.originalname}`;
+
+  const imageBuffer = await sharp(req.file.buffer)
+    .toFormat("jpeg")
+    .jpeg({ quality: 90 })
+    .toBuffer();
+
+  const filePath = `Scooby/Users`;
+  const fileName = req.body.petImage;
+
+  const result = await uploadToClodinary(imageBuffer, fileName, filePath);
+  //console.log(result)
+
+  req.body.profileImage = result.secure_url;
+
+  next();
+});
+
+const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
+  return new Promise((resolve, reject) => {
+    options.folder = folderPath;
+
+    options.public_id = filename;
+    const uploadStream = cloudinary.uploader.upload_stream(
+      options,
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+    uploadStream.end(buffer);
+  });
+};
+
+
+
 
 const createSendToken = (res, result, statusCode) => {
   const token = result.generateToken(result._id);

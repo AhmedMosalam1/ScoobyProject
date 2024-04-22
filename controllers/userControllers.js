@@ -99,6 +99,7 @@ exports.getOne = catchAsync(async (req, res, next) => {
 
     res.status(201).json({
         status: "success",
+        result:doc.length,
         data: {
             data: doc
         }

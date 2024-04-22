@@ -206,6 +206,7 @@ exports.getmypets = catchAsync(async (req, res, next) => {
   }
   res.status(200).json({
     status: "success",
+    result:pets.length,
     data: pets,
   });
 });
@@ -213,10 +214,11 @@ exports.getmypets = catchAsync(async (req, res, next) => {
 //*********************************************** */
 
 exports.addpettouser = catchAsync(async (req, res, next) => {
+  req.body.user = req.params.id
   const newpet = await petModel.create(req.body);
   const user = await usermodel.findById(req.params.id);
   //console.log(user)
-  user.pets.push(newpet.id);
+  //user.pets.push(newpet.id);
   
   await user.save();
   res.status(201).json({
@@ -257,7 +259,7 @@ exports.addpet = catchAsync(async (req, res, next) => {
 //*************************************************************** */
 exports.getpets = catchAsync(async (req, res, next) => {
  
-  const pets = await petModel.find()
+  const pets = await petModel.find().populate('user')
   
   //.populate({
   //         path:'user',

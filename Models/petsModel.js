@@ -59,17 +59,19 @@ const petSchema = new mongoose.Schema({
         //required:[true,'The adoption field must not be empty'] 
         default:'user'
     },
-    shelterInfo:{
-        type:mongoose.Schema.ObjectId,
-        ref:'shelter',
+    // shelter_id:{
 
-    },
+    // },
     // shelterName:{
     //     type:String
     // },
     // inShelter:{
     //     type:Boolean
     // },
+        shelterInfo:{
+        type:mongoose.Schema.ObjectId,
+        ref:'shelter',
+    },
     availableForAdoption:{
         type:Boolean
     },
@@ -95,16 +97,16 @@ const petSchema = new mongoose.Schema({
 
 
 
-petSchema.pre(/^find/,function(next){
+// petSchema.pre(/^find/,function(next){
 
-    this.populate({
-        path:'user',
-        select:'-email -password -createdAt -updatedAt -__v'
+//     this.populate({
+//         path:'user',
+//         select:'-email -password -createdAt -updatedAt -__v'
     
     
-    });
-    next()
-})
+//     });
+//     next()
+// })
 
 const petModle = mongoose.model('pet',petSchema);
 

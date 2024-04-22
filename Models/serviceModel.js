@@ -44,10 +44,17 @@ const serviceSchema = new mongoose.Schema({
     },
     phone:{
         type: Number
+    },serviceProfile:{
+        type:mongoose.Schema.ObjectId,
+            ref:'serviceProfile',
     }
 },{
     timestamps: true,
 })
+
+
+
+
 
 const serviceModel = mongoose.model('services',serviceSchema);
 

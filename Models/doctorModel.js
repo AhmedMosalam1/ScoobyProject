@@ -19,26 +19,60 @@ const doctorSchema = new mongoose.Schema({
         type:String,
        // required:[true,'The image field must not be empty']
     },
-    rete:{
-        type:Number
+    // availableTime:{
+    //     type:String,
+
+
+    // },
+    // city:{
+    //     type:String,
+    // }
+    // ,
+    rate:{
+        type:Number,
+        set:val=>Math.round(val*10)/10
     },
-    nmberOfRate:{
+    numberOfRate:{
         type:Number
     },
     review:{
         type:String
+    },
+    imagesProfile:[String],
+    phone:{
+        type:String
+    },about:{
+        type:String
+    },specialized_in:[
+        String
+    ],
+    accepted_pet_types:[{
+        type:String,
+        //enum:['Dogs','Cats']
     }
+    ],
+    // reviewsOfDoctors:[{
+    //     type:mongoose.Schema.ObjectId,
+    //     ref:'review',
+    // }]
+
     
 },
 
 
 
-    {toJSON:{
-        transform:(doc,retuDoc)=>_.omit(retuDoc,['__v'])
-    }}
+    {toJSON:{virtuals:true},
+    toObject:{virtuals:true}}
 )
 
 
+//virtual populate
+doctorSchema.virtual('reviewsOfDoctor',{
+    ref:'review',
+    foreignField:'doctor',
+    localField:'_id'
+
+})
 
 const doctormodel = mongoose.model('doctor',doctorSchema);
 
