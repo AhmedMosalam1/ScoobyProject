@@ -4,7 +4,7 @@ const favController = require('../controllers/favControllers')
 
 
 router.get('/getfav/:id',favController.getFav)
-router.post("/addfav/:id",favController.addFav)
+router.patch("/addfav/:id",favController.addFav)
 
 
 module.exports = router
