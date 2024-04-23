@@ -191,12 +191,5 @@ exports.getServiceProfile = catchAsync(async (req, res, next) => {
         return next(new appError(`Can't find doctor on this id`, 404));
     }
 
-    res.status(201).json({
-        status: "success",
-        
-        data: {
-            data: doc,
-            //reviewsofDctors:doc.reviewsOfDoctor.length,
-        }
-    })
+    res.status(201).json({doc})
 })
