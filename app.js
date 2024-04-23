@@ -33,6 +33,7 @@ const foundedRouters=require('./routes/foundedRoutes')
 const favRoutes = require("./routes/favListRoutes")
 const couponRoutes = require("./routes/couponRoutes")
 const cartRoutes = require("./routes/cartRoutes")
+const serviceProfileRoutes=require("./routes/serviceProfileRoutes")
 
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
@@ -79,6 +80,7 @@ app.use('/scooby/api/founded',foundedRouters)
 app.use('/scooby/api/fav',favRoutes)
 app.use('/scooby/api/coupon',couponRoutes)
 app.use('/scooby/api/cart',cartRoutes)
+app.use('/scooby/api/serviceProfile',serviceProfileRoutes)
 
 
 app.all('*', (req, res, next) => {

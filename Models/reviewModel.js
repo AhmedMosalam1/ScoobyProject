@@ -2,7 +2,8 @@ const mongoose=require('mongoose');
 const slugify=require('slugify')
 const validator=require('validator')
 //const User=require('./usermodel')
-const Tour=require('./serviceModel')
+const serviceProfileModel=require('../Models/serviceProfileModel')
+const doctorModel=require('../Models/doctorModel')
 const reviewSchema=new mongoose.Schema({
     name:{
         type:String
@@ -29,10 +30,15 @@ const reviewSchema=new mongoose.Schema({
     },
     service:{
             type:mongoose.Schema.ObjectId,
-            ref:'services',
+            ref:'serviceProfile',
             //required:[true,"Review must belong to a service."]
         }
     ,
+    doctor:{
+        type:mongoose.Schema.ObjectId,
+        ref:'doctor',
+        //required:[true,"Review must belong to a service."]
+    },
     user:{
             type:mongoose.Schema.ObjectId,
             ref:'user',
@@ -50,16 +56,16 @@ const reviewSchema=new mongoose.Schema({
 
 
 
-reviewSchema.pre(/^find/,function(next){
+// reviewSchema.pre(/^find/,function(next){
 
-    this.populate({
-        path:'service',
-        select:'serviceType'
+//     this.populate({
+//         path:'serviceProfile',
+//         select:'name'
     
     
-    });
-    next()
-})
+//     });
+//     next()
+// })
 
 
 reviewSchema.pre(/^find/,function(next){
@@ -74,63 +80,91 @@ reviewSchema.pre(/^find/,function(next){
 })
 
 
-// reviewSchema.statics.calcAverageRatings=async function(tourId){
-// const stats=await this.aggregate([{
-//     $match:{tour:tourId}
-// },{
-//     $group:{
-//         _id:'$tour',
-//         nRating:{$sum:1},
-//         avgRating:{$avg:'$rating'}
-//     }
-// }
 
 
+reviewSchema.statics.calcAverageRatings=async function(id){
+const stats=await this.aggregate([{
+    $match:{doctor:id},
+    
 
-// ])
+},{
+    $group:{
+        _id:'$doctor',
+        nRating:{$sum:1},
+        avgRating:{$avg:'$rating'}
+    }
+}
+
+])
+
 
 //console.log(stats)
 
-// if(stats.length >0){
-//     await Tour.findByIdAndUpdate(tourId,{
-//         ratingsAverage:stats[0].avgRating, 
-//         ratingsQuantity:stats[0].nRating
+if(stats.length >0){
+    await doctorModel.findByIdAndUpdate(id,{
+        rate:stats[0].avgRating, 
+        numberOfRate:stats[0].nRating
     
     
-//     })
-//     }else{
-//         await Tour.findByIdAndUpdate(tourId,{
-//             ratingsAverage:4.5, 
-//             ratingsQuantity:0
+    })
+    }else{
+        await doctorModel.findByIdAndUpdate(id,{
+            rate:4.5, 
+            numberOfRate:0
         
         
-//         })
+        })
 
-//     }
+    }
 
-// }
-// // save to the tour
+}
+/////////////////////////////////////////////////////////////////////////
+reviewSchema.statics.calcAverageRatingofService=async function(id){
+    const stats=await this.aggregate([{
+        $match:{service:id},
+        
+    
+    },{
+        $group:{
+            _id:'$service',
+            nRating:{$sum:1},
+            avgRating:{$avg:'$rating'}
+        }
+    }
+    
+    ])
+    
+    
+    //console.log(stats)
+    
+    if(stats.length >0){
+        await serviceProfileModel.findByIdAndUpdate(id,{
+            rate:stats[0].avgRating, 
+            numberOfRate:stats[0].nRating
+        
+        
+        })
+        }else{
+            await serviceProfileModel.findByIdAndUpdate(id,{
+                rate:4.5, 
+                numberOfRate:0
+            
+            
+            })
+    
+        }
+    
+    }
 
 
-// reviewSchema.post('save',function(){
-// //this points to current review
-// this.constructor.calcAverageRatings(this.tour);
+reviewSchema.post('save',function(){
+//this points to current review
+this.constructor.calcAverageRatings(this.doctor);
+this.constructor.calcAverageRatingofService(this.service);
 
 
-// })
+})
 
-
-// reviewSchema.pre(/^findOneAnd/,async function(next){
-// this.r=await this.findOne()
-// //console.log(this.r)
-// next()
-// })
-
-// reviewSchema.post(/^findOneAnd/,async function(){
-
-//     //await this.findOne() dose not work here query has allredy executed
-//     await this.r.constructor.calcAverageRatings(this.r.tour)
-//     })
 
 
 

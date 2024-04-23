@@ -16,6 +16,19 @@ exports.setServiceUserIds = (req, res, next) => {
     next();
 };
 
+exports.setDoctorsUserIds = (req, res, next) => {
+    //Allow nested routes
+    if (!req.body.doctor) {
+        req.body.doctor= req.params.id;
+        // console.log(req.body.tour)
+    }
+
+    if (!req.body.user) {
+        req.body.user = req.user.id;
+    }
+    next();
+};
+
 //*************************************************** */
 exports.createReview = catchAsync(async (req, res, next) => {
     const newReview = await reviewModel.create(req.body);
@@ -32,7 +45,7 @@ exports.createReview = catchAsync(async (req, res, next) => {
 exports.getAllReview = catchAsync(async (req, res, next) => {
     let filter = {};
     if (req.params.id) {
-        filter = { service: req.params.id };
+        filter = { doctotors: req.params.id };
     }
 
     const Reviews = await reviewModel.find(filter).select("-__v");

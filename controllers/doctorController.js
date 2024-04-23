@@ -21,42 +21,88 @@ const upload = multer({
     fileFilter: multerFilter
 })
 
-exports.uploadPhoto = upload.single('doctorImage')
+ //exports.uploadPhoto = upload.single('doctorImage')
+// exports.doctorImages = upload.fields([
+//     { name: 'doctorImage', maxCount: 1 },
+//    // { name: 'imagesProfile', maxCount: 5 }
+//   ]);
 
+   
 
-exports.resizePhotoProject = catchAsync(async (req, res, next) => {
+exports.doctorImages = (req, res, next) => {
+    // Upload doctorImage
+    upload.fields([
+        { name: 'doctorImage', maxCount: 1 },
+        { name: 'imagesProfile', maxCount: 5 }
+    ])(req, res, async (err) => {
+        if (err) {
+            return res.status(400).json({ error: 'Failed to upload files' });
+        }
 
-    //console.log(req.file);
+        const doctorImageFiles = req.files['doctorImage'];
 
-    if (!req.file) return next()
-    console.log("object");
+        // Check if doctorImage file is present
+        // if (!doctorImageFiles || doctorImageFiles.length === 0) {
+        //     return res.status(400).json({ error: 'doctorImage file is required' });
+        //     next()
+        // }
 
-    req.body.doctorImage= `${req.file.originalname}`
+        // Process doctorImage
+        // if(req.files['doctorImage']){
+        //     const doctorImageFile = doctorImageFiles[0];
+        // const doctorImageBuffer = await sharp(doctorImageFile.buffer) // Convert to buffer
+        //     .toFormat('jpeg')
+        //     .jpeg({ quality: 90 })
+        //     .toBuffer(); // Convert to buffer
 
+        // // Upload doctorImage to Cloudinary
+        // const doctorImageResult = await uploadToClodinary(doctorImageBuffer, doctorImageFile.originalname, 'Scooby/Doctors');
+        // req.body.doctorImage = doctorImageResult.secure_url;
 
-    const imageBuffer = await sharp(req.file.buffer)
-        .toFormat('jpeg')
-        .jpeg({ quality: 90 })
-        .toBuffer()
+        // }
+        const doctorImageFile = doctorImageFiles[0];
+        const doctorImageBuffer = await sharp(doctorImageFile.buffer) // Convert to buffer
+            .toFormat('jpeg')
+            .jpeg({ quality: 90 })
+            .toBuffer(); // Convert to buffer
 
-    const filePath = `Scooby/Doctors`
-    const fileName = req.body.doctorImage
+        // Upload doctorImage to Cloudinary
+        const doctorImageResult = await uploadToClodinary(doctorImageBuffer, doctorImageFile.originalname, 'Scooby/Doctors');
+        req.body.doctorImage = doctorImageResult.secure_url;
+      
+        req.body.imagesProfile = [];
 
-    const result = await uploadToClodinary(imageBuffer, fileName, filePath)
-    //console.log(result)
+        await Promise.all(
+            req.files.imagesProfile.map(async (file, i) => {
+                const filename = `doctor-${Date.now()}-${i + 1}.jpeg`;
 
-    req.body.doctorImage = result.secure_url
+                const imageBuffer = await sharp(file.buffer)
+                    .toFormat('jpeg')
+                    .jpeg({ quality: 90 })
+                    .toBuffer();
 
-    next()
-})
+                const filePath = `Scooby/Doctors`;
+                const result = await uploadToClodinary(imageBuffer, filename, filePath);
+               // console.log(result)
 
+                req.body.imagesProfile.push(result.secure_url);
+            })
+        );
 
-
+        next();
+    });
+};
 
 
 
 //****************************************************************** */
 exports.createdoctor=catchAsync(async(req,res,next)=>{
+    //specialized_in:[
+    //     String
+    // ],
+    // accepted_pet_types
+    req.body.specialized_in = req.body.specialized_in.split(',').map(coord => (coord.trim()));
+    req.body.accepted_pet_types = req.body.accepted_pet_types.split(',').map(coord => (coord.trim()));
 
     const newdoctor=await doctormodel.create(req.body)
     res.status(201).json({
@@ -71,7 +117,7 @@ exports.getdoctors=catchAsync(async(req,res,next)=>{
 
    
 
-    const doctors=await doctormodel.find()   
+    const doctors=await doctormodel.find().populate('reviewsOfDoctor') 
  if(doctors){
     res.status(200).json({
         status:'success',
@@ -113,3 +159,44 @@ exports.getdoctors=catchAsync(async(req,res,next)=>{
     }
 
 
+
+    //*********************************************************** */
+    exports.updatedoctor = catchAsync(async (req, res, next) => {
+    req.body.specialized_in = req.body.specialized_in.split(',').map(coord => (coord.trim()));
+    req.body.accepted_pet_types = req.body.accepted_pet_types.split(',').map(coord => (coord.trim()));
+
+    
+        const doctor = await doctormodel.findByIdAndUpdate(req.params.id, req.body, { new: true })
+      
+        if (!doctor) {
+            return next(new appError(`Can't find this doctor`, 404));
+        }
+      
+      
+        res.status(201).json({
+            status: "success",
+            data: {
+                data: doctor
+            }
+        })
+      })
+
+
+//********************************************************************** */
+exports.getDoctor = catchAsync(async (req, res, next) => {
+
+    let doc = await doctormodel.findById(req.params.id).populate('reviewsOfDoctor')
+
+    if (!doc) {
+        return next(new appError(`Can't find doctor on this id`, 404));
+    }
+
+    res.status(201).json({
+        status: "success",
+        
+        data: {
+            data: doc,
+            reviewsofDctors:doc.reviewsOfDoctor.length,
+        }
+    })
+})

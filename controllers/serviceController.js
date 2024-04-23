@@ -147,3 +147,22 @@ const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
         uploadStream.end(buffer)
     })
 }
+
+
+exports.getServicePage = catchAsync(async (req, res, next) => {
+
+    let doc = await serviceModel.findById(req.params.id)
+
+    if (!doc) {
+        return next(new appError(`Can't find doctor on this id`, 404));
+    }
+
+    res.status(201).json({
+        status: "success",
+        
+        data: {
+            data: doc,
+            //reviewsofDctors:doc.reviewsOfDoctor.length,
+        }
+    })
+})
