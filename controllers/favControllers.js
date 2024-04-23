@@ -91,24 +91,26 @@ exports.addFav = catchAsync(async (req, res, next) => {
 });
 
 
-exports.getFav = catchAsync(async (req, res, next) => {
+exports.getFavProduct = catchAsync(async (req, res, next) => {
 
-    if (req.query.productId) {
         const user = await User.findById(req.params.id).populate('favProduct');
 
         return res.status(200).json({
             status: 'success',
             data: user.favProduct,
         });
-    } else if (req.query.petId) {
+   
+});
+
+exports.getFavPet = catchAsync(async (req, res, next) => {
         const user = await User.findById(req.params.id).populate('favPet');
 
         return res.status(200).json({
             status: 'success',
             data: user.favPet,
         });
-    }
 });
+
 
 
 
