@@ -90,3 +90,15 @@ exports.deleteReview = catchAsync(async (req, res, next) => {
 });
 
 ////////////////////////////////////////////////////////////
+
+exports.getMyReviews=catchAsync(async (req, res, next) => {
+  
+
+    const Reviews = await reviewModel.find({ user: req.user.id }).select("-__v");
+
+    res.status(200).json({
+        status: "success",
+        result: Reviews.length,
+        data: { Reviews },
+    });
+});

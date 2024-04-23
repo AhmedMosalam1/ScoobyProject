@@ -14,6 +14,7 @@ router.post('/createReviewService/:id',AuthController.protect,reviewController.s
 router.post('/createReviewDoctor/:id',AuthController.protect,reviewController.setDoctorsUserIds,reviewController.createReview)
 router.delete('/deleteReview/:id',reviewController.deleteReview)
 router.patch('/updateReview/:id',reviewController.updateReview)
+router.get('/getMyReviews',AuthController.protect,reviewController.getMyReviews)
 
 
 module.exports=router
