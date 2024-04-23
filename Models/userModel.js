@@ -62,7 +62,7 @@ const userSchema = new mongoose.Schema({
     },
     favPet:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'pets'
+        ref: 'pet'
     }],
     favPetsNumber:{
         type:Number
