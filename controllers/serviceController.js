@@ -22,7 +22,7 @@ exports.createService = catchAsync(async(req,res)=>{
 })
 //-------------------------------------------------------------get all services
 exports.getAllServices = catchAsync(async(req,res)=>{
-    const allServices = await serviceModel.find().populate('serviceProfile')
+    const allServices = await serviceModel.find()
     res.status(200).json({
         // image : allServices.serviceImage,
         // type : allServices.serviceType ,
@@ -151,10 +151,10 @@ const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
 
 exports.getServicePage = catchAsync(async (req, res, next) => {
 
-    let doc = await serviceModel.findById(req.params.id).populate('serviceProfile')
+    let doc = await serviceModel.findById(req.params.id)
 
     if (!doc) {
-        return next(new appError(`Can't find doctor on this id`, 404));
+        return next(new appError(`Can't find  this id`, 404));
     }
 
     res.status(201).json({
