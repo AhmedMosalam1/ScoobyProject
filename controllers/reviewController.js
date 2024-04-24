@@ -102,17 +102,39 @@ exports.updateReview = catchAsync(async (req, res, next) => {
 });
 
 //**************************************************************/
-exports.deleteReview = catchAsync(async (req, res, next) => {
-    //const petId = req.params.id
-    const review = await reviewModel.findByIdAndDelete(req.params.id);
-    if (!review) {
-        return next(new appError("review not found", 400));
-    }
+// exports.deleteReview = catchAsync(async (req, res, next) => {
+//     //const petId = req.params.id
+//     const review = await reviewModel.findByIdAndDelete(req.params.id);
+//     if (!review) {
+//         return next(new appError("review not found", 400));
+//     }
 
-    res.status(200).json({
-        message: "review deleted successfully",
+//     res.status(200).json({
+//         message: "review deleted successfully",
+//     });
+// });
+
+
+exports.deleteReview =catchAsync(async (req, res, next) => {
+        //const petId = req.params.id
+        try {
+            // Find the review by ID and delete it
+            const deletedReview = await reviewModel.findByIdAndDelete(req.params.id);
+            
+            if (!deletedReview) {
+                return res.status(404).json({ message: 'Review not found' });
+            }
+    
+            // Decrement the number of rates
+            await serviceProfileModel.findByIdAndUpdate(deletedReview.service, {
+                $inc: { numberOfRate: -1 } // Decrement by 1
+            });
+    
+            res.status(200).json({ message: 'Review deleted successfully' });
+        } catch (error) {
+            next(error); // Pass the error to the error handling middleware
+        }
     });
-});
 
 ////////////////////////////////////////////////////////////
 
