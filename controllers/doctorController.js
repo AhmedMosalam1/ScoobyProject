@@ -183,9 +183,34 @@ exports.getdoctors=catchAsync(async(req,res,next)=>{
 
 
 //********************************************************************** */
+// exports.getDoctor = catchAsync(async (req, res, next) => {
+
+//     let doc = await doctormodel.findById(req.params.id).populate('reviewsOfDoctor')
+
+//     if (!doc) {
+//         return next(new appError(`Can't find doctor on this id`, 404));
+//     }
+
+//     res.status(201).json({
+//         status: "success",
+        
+//         data: {
+//             data: doc,
+//             reviewsofDctors:doc.reviewsOfDoctor.length,
+//         }
+//     })
+// })
+
 exports.getDoctor = catchAsync(async (req, res, next) => {
 
     let doc = await doctormodel.findById(req.params.id).populate('reviewsOfDoctor')
+   
+//     await seviceProfleModel.findByIdAndUpdate(req.params.id, {
+//         numberOfRate: doc.reviewsOfService.length// Decrement by 1
+//     },{new:true});
+//    doc.save()
+const updatedDoc = await doctormodel.findByIdAndUpdate(req.params.id, { numberOfRate: doc.reviewsOfDoctor.length }, { new: true }).populate('reviewsOfDoctor')
+
 
     if (!doc) {
         return next(new appError(`Can't find doctor on this id`, 404));
@@ -195,7 +220,7 @@ exports.getDoctor = catchAsync(async (req, res, next) => {
         status: "success",
         
         data: {
-            data: doc,
+            data: updatedDoc,
             reviewsofDctors:doc.reviewsOfDoctor.length,
         }
     })
