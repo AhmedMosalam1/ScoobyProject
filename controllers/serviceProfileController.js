@@ -183,13 +183,33 @@ exports.getServicesProfile=catchAsync(async(req,res,next)=>{
 
 
 //********************************************************************** */
+// exports.getServiceProfile = catchAsync(async (req, res, next) => {
+
+//     let doc = await ServiceProfileModel.findById(req.params.id).populate('reviewsOfService')
+
+//     if (!doc) {
+//         return next(new appError(`Can't find doctor on this id`, 404));
+//     }
+
+//     res.status(201).json({doc})
+// })
+
+
+//************************************************
 exports.getServiceProfile = catchAsync(async (req, res, next) => {
 
+   
     let doc = await ServiceProfileModel.findById(req.params.id).populate('reviewsOfService')
+//     await seviceProfleModel.findByIdAndUpdate(req.params.id, {
+//         numberOfRate: doc.reviewsOfService.length// Decrement by 1
+//     },{new:true});
+//    doc.save()
+const updatedDoc = await ServiceProfileModel.findByIdAndUpdate(req.params.id, { numberOfRate: doc.reviewsOfService.length }, { new: true }).populate('reviewsOfService')
+
 
     if (!doc) {
-        return next(new appError(`Can't find doctor on this id`, 404));
+        return next(new appError(`Can't find this service on this id`, 404));
     }
 
-    res.status(201).json({doc})
+    res.status(201).json({updatedDoc})
 })
