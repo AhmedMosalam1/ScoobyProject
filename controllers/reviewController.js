@@ -3,6 +3,18 @@ const reviewModel = require("../Models/reviewModel");
 const catchAsync = require("express-async-handler");
 const appError = require("../utils/appError");
 
+function shuffledReviews(array) {
+    // Loop over the array from the end to the beginning
+    for (let i = array.length - 1; i > 0; i--) {
+        // Generate a random index between 0 and i
+        const j = Math.floor(Math.random() * (i + 1));
+        // Swap the elements at positions i and j
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+//*************************************************** */
 exports.setServiceUserIds = (req, res, next) => {
     //Allow nested routes
     if (!req.body.service) {
@@ -54,6 +66,19 @@ exports.getAllReview = catchAsync(async (req, res, next) => {
         status: "success",
         result: Reviews.length,
         data: { Reviews },
+    });
+});
+//***************************************************** */
+
+exports.getAllAppReviews = catchAsync(async (req, res, next) => {
+
+    const Reviews = await reviewModel.find().select("-__v");
+    const shuffleReviews = await shuffledReviews(Reviews)
+
+    res.status(200).json({
+        status: "success",
+        result: Reviews.length,
+        data: { shuffleReviews },
     });
 });
 
