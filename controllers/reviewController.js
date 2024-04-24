@@ -42,15 +42,15 @@ exports.setDoctorsUserIds = (req, res, next) => {
 };
 
 //*************************************************** */
-exports.createReview = catchAsync(async (req, res, next) => {
-    const newReview = await reviewModel.create(req.body);
-    res.status(201).json({
-        status: "success",
-        data: {
-            review: newReview,
-        },
-    });
-});
+// exports.createReview = catchAsync(async (req, res, next) => {
+//     const newReview = await reviewModel.create(req.body);
+//     res.status(201).json({
+//         status: "success",
+//         data: {
+//             review: newReview,
+//         },
+//     });
+// });
 
 //***************************************************** */
 
@@ -127,3 +127,63 @@ exports.getMyReviews=catchAsync(async (req, res, next) => {
         data: { Reviews },
     });
 });
+
+exports.createReview = catchAsync(async (req, res, next) => {
+    if (req.query.serviceId) {
+        
+        const serviceId = req.query.serviceId;
+        const userId = req.params.id;
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return next(new appError(`Can't find User on this id`, 404));
+
+        }
+        if (!req.body.service) {
+            req.body.service =serviceId ;
+            // console.log(req.body.tour)
+        }
+    
+        if (!req.body.user) {
+            req.body.user =userId ;
+        }
+        const newReview = await reviewModel.create(req.body);
+       
+        res.status(201).json({newReview})
+        next();
+
+
+       
+
+}else if(req.query.doctorId){
+    const  doctorId= req.query.doctorId;
+        const userId = req.params.id;
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return next(new appError(`Can't find User on this id`, 404));
+
+        }
+        if (!req.body.doctor) {
+            req.body.doctor =doctorId ;
+            // console.log(req.body.tour)
+        }
+    
+        if (!req.body.user) {
+            req.body.user =userId ;
+        }
+        const newReview = await reviewModel.create(req.body);
+       
+        res.status(201).json({newReview})
+        next();
+
+
+}
+
+}
+)
+
+
+
