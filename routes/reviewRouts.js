@@ -10,8 +10,11 @@ const router=express.Router({mergeParams:true})
 
 
 router.get('/getAllReview/:id',reviewController.getAllReview)
-router.post('/createReviewService/:id',AuthController.protect,reviewController.setServiceUserIds,reviewController.createReview)
-router.post('/createReviewDoctor/:id',AuthController.protect,reviewController.setDoctorsUserIds,reviewController.createReview)
+// router.post('/createReviewService/:id',AuthController.protect,reviewController.setServiceUserIds,reviewController.createReview)
+// router.post('/createReviewDoctor/:id',AuthController.protect,reviewController.setDoctorsUserIds,reviewController.createReview)
+router.post('/createReviewService/:id',reviewController.createReview)
+router.post('/createReviewDoctor/:id',reviewController.createReview)
+
 router.delete('/deleteReview/:id',reviewController.deleteReview)
 router.patch('/updateReview/:id',reviewController.updateReview)
 router.get('/getMyReviews/:id',reviewController.getMyReviews)
