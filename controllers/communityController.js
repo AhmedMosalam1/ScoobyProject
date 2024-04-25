@@ -43,7 +43,7 @@ exports.addPost = catchAsync(async(req,res,next)=>{
 })
 //-------------------------------------------------------------get all posts
 exports.getAllPosts = catchAsync(async(req,res)=>{
-    const allPosts = await communityModel.find({onlyMe:false}).populate('likes_Id')
+    const allPosts = await communityModel.find({onlyMe:false})
     const shuffledPosts = await shufflePosts(allPosts)
     res.status(200).json({
         shuffledPosts
