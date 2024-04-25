@@ -33,7 +33,7 @@ const requestSchema = new mongoose.Schema({
     },
     payment:{
         type:String,
-        enum:['Online Payment','Cash']
+        enum:['Visa','Master Card','Local Cards','Mobile Wallet','Cash']
     },
     country:{
         type:String
@@ -47,6 +47,24 @@ const requestSchema = new mongoose.Schema({
     completed:{
         type:Boolean,
         default:false
+    },
+    notes:{
+        type:String
+    },
+    remindMe3Hours:{
+        type:Boolean
+    },
+    cardNumber:{
+        type:String
+    },
+    cardExpireDate:{
+        type:Date
+    },
+    cardSecurityCode:{
+        type:String
+    },
+    saveCard:{
+        type:Boolean
     }
 },{
     timestamps: true,

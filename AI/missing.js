@@ -2,7 +2,7 @@ const axios = require("axios");
 const catchAsync = require("express-async-handler");
 const appError = require("../utils/appError");
 const cloudinary = require("../utils/cloud");
-const FoundedModel = require('../Models/foundedModel')
+const FoundedModel = require("../Models/foundedModel");
 const multer = require("multer");
 const sharp = require("sharp");
 
@@ -41,9 +41,9 @@ exports.resizePhotoProject = catchAsync(async (req, res, next) => {
     req.body.petImage = result.secure_url;
     image = req.body.petImage;
 
-    console.log('image after upload...')
+    console.log("image after upload...");
     console.log(image);
-    console.log('----------------------')
+    console.log("----------------------");
     next();
 });
 
@@ -100,7 +100,7 @@ cloudinary.config({
 exports.missing = catchAsync(async (req, res, next) => {
     console.log("Start....");
 
-    // Classify the image
+    //Classify the image
     const classificationResult = await getClassificationResult(image);
     console.log(classificationResult.Calss);
     console.log("--------------------");
@@ -109,46 +109,73 @@ exports.missing = catchAsync(async (req, res, next) => {
     if (!classificationResult.Calss) {
         return next(new appError("Please enter image again", 404));
     } else if (classificationResult.Calss === "other") {
-        return next(new appError("Please send an image of a dog or cat only, or try entering another image", 404));
-    }
+        return next(
+            new appError(
+                "Please send an image of a dog or cat only, or try entering another image",
+                404
+            )
+        );
+    } else {
+        try {
+                //Get founded cats from cloudinary
+                let result ;
+                if(classificationResult.Calss === "cat"){
+                    result = await cloudinary.api.resources({
+                        type: "upload",
+                        prefix: "Scooby/Missing/Founded/Cats",
+                    });
+                }else if(classificationResult.Calss === "dog"){
+                    result = await cloudinary.api.resources({
+                        type: "upload",
+                        prefix: "Scooby/Missing/Founded/Dogs",
+                    });
+                }
+                
+            const foundedPets = result.resources.map((obj) => obj.secure_url);
 
-    try {
-        // Get founded pets from cloudinary
-        const result = await cloudinary.api.resources({ type: "upload", prefix: "Scooby/Missing/Founded" });
-        const foundedPets = result.resources.map(obj => obj.secure_url);
-
-        console.log(foundedPets);
-        console.log("--------------------");
-
-        // Calculate similarity for each founded pet
-        let similarityArray = [];
-
-        for (let i = 0; i < foundedPets.length; i++) {
-            let similarity ;
-            while(!similarity){
-                similarity = await getSimilarityDistance(image, foundedPets[i]);
-            }
-            let user = await FoundedModel.find({petImage:foundedPets[i]})
-            let userId = user.userId
-            let description = user.description
-            console.log(similarity.Similarity)
-            console.log(user)
+            console.log(foundedPets);
             console.log("--------------------");
-            similarityArray.push({ similarity:similarity.Similarity , url: foundedPets[i] , description , userId });
+
+            // Calculate similarity for each founded pet
+            let similarityArray = [];
+
+            for (let i = 0; i < foundedPets.length; i++) {
+                let similarity;
+                while (!similarity) {
+                    similarity = await getSimilarityDistance(image, foundedPets[i]);
+                }
+                
+                let user = await FoundedModel.find({ petImage: foundedPets[i] });
+                let userId = user[0].userId;
+                let description = user[0].description
+                let location = user[0].locations
+                let phoneNumber = user[0].phoneNumber
+                let createdAt = user[0].createdAt
+                console.log(similarity.Similarity);
+                console.log(user[0]);
+                console.log("--------------------");
+                similarityArray.push({
+                    similarity: similarity.Similarity,
+                    url: foundedPets[i],
+                    description,
+                    userId,
+                    location,
+                    phoneNumber,
+                    createdAt
+                });
+            }
+            let filteredArray = similarityArray.filter(item => typeof item.similarity !== 'undefined');
+            console.log(filteredArray)
+            console.log("--------------------");
+            let sortedSimilarityArray =filteredArray.sort((a, b) => b.similarity - a.similarity);
+            console.log(sortedSimilarityArray)
+            console.log("--------------------");
+            // Send similarity array as response
+            res.status(200).json({ similarityArray: sortedSimilarityArray.slice(0, 2) });
+
+            console.log("End......");
+        } catch (err) {
+            return next(new appError("Error in processing the request", 500));
         }
-
-        // Sort similarity array based on similarity value
-        similarityArray.sort((a, b) => b.similarity.Similarity - a.similarity.Similarity);
-
-        console.log("--------------------");
-
-        // Send similarity array as response
-        res.status(200).json({ similarityArray: similarityArray.slice(0, 2) });
-
-        console.log("End......");
-    } catch (err) {
-        return next(new appError("Error in processing the request", 500));
     }
 });
-
-

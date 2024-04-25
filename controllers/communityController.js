@@ -8,9 +8,20 @@ const cloudinary = require("../utils/cloud")
 const sharp = require("sharp")
 //process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
+function shufflePosts(array) {
+    // Loop over the array from the end to the beginning
+    for (let i = array.length - 1; i > 0; i--) {
+        // Generate a random index between 0 and i
+        const j = Math.floor(Math.random() * (i + 1));
+        // Swap the elements at positions i and j
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
 //-------------------------------------------------------------add post
 exports.addPost = catchAsync(async(req,res,next)=>{
-    const userId = req.user._id
+    const userId = req.params.id
     const user = await userModel.findById(userId)
     const userImage = user.profileImage
     const userName = user.name
@@ -33,8 +44,9 @@ exports.addPost = catchAsync(async(req,res,next)=>{
 //-------------------------------------------------------------get all posts
 exports.getAllPosts = catchAsync(async(req,res)=>{
     const allPosts = await communityModel.find({onlyMe:false}).populate('likes_Id')
+    const shuffledPosts = await shufflePosts(allPosts)
     res.status(200).json({
-        allPosts
+        shuffledPosts
     })
     
 })
@@ -64,23 +76,19 @@ exports.editPost = catchAsync(async(req,res)=>{
 })
 //-------------------------------------------------------------Like & disLike
 exports.likeAndDisLike = catchAsync(async(req,res,next)=>{
-    const currentUser = await userModel.findById(req.user._id)
-    const post = await communityModel.findById(req.params.id)
+    const currentUser = await userModel.findById(req.params.id)
+    let post = await communityModel.findById(req.query.postId)
     if(!currentUser){
         return next(new appError('You should login first'),401)
     }
     const isLiked = post.likes_Id.includes(currentUser._id)
     if(isLiked){
         //disLike
-        await communityModel.findByIdAndUpdate(post._id, {$pull: { likes_Id:currentUser._id }})
-        await communityModel.findByIdAndUpdate(post._id, {$inc: { likesNumber:-1 }})
-        post.save()
+        post = await communityModel.findByIdAndUpdate(post._id, { $pull: { likes_Id: currentUser._id }, $inc: { likesNumber: -1 } }, { new: true })
         res.status(200).json({post})
     }else{
         //like
-        await communityModel.findByIdAndUpdate(post._id, {$push: { likes_Id:currentUser._id }})
-        await communityModel.findByIdAndUpdate(post._id, {$inc: { likesNumber:1 }})
-        post.save()
+        post = await communityModel.findByIdAndUpdate(post._id, { $push: { likes_Id: currentUser._id }, $inc: { likesNumber: 1 } }, { new: true })
         res.status(200).json({post})
     }
 })

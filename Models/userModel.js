@@ -74,6 +74,7 @@ const userSchema = new mongoose.Schema({
     favProductsNumber:{
         type:Number
     },
+    cards:[{}],
     passwordChangedAt: Date,
     passwordResetCode: String,
     passwordResetExpires: Date,

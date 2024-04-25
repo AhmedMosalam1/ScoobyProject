@@ -34,6 +34,8 @@ const favRoutes = require("./routes/favListRoutes")
 const couponRoutes = require("./routes/couponRoutes")
 const cartRoutes = require("./routes/cartRoutes")
 const serviceProfileRoutes=require("./routes/serviceProfileRoutes")
+const vaccineRoutes = require('./routes/vaccineRoutes')
+const reminderRoutes = require('./routes/reminderRoutes')
 
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
@@ -81,6 +83,8 @@ app.use('/scooby/api/fav',favRoutes)
 app.use('/scooby/api/coupon',couponRoutes)
 app.use('/scooby/api/cart',cartRoutes)
 app.use('/scooby/api/serviceProfile',serviceProfileRoutes)
+app.use('/scooby/api/vaccine',vaccineRoutes)
+app.use('/scooby/api/reminder',reminderRoutes)
 
 
 app.all('*', (req, res, next) => {

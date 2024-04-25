@@ -16,17 +16,26 @@ const foundedSchema = new mongoose.Schema({
     userId:{
         type:mongoose.Schema.ObjectId,
         ref:'user',
-       // required:[true,'The image field must not be empty']
-        
+       // required:[true,'The image field must not be empty'] 
+    },
+    locations:
+    {
+        type: {
+            type: String,
+            default: "Point",
+        },
+        coordinates: [Number]
+    },
+    phoneNumber:{
+        type:String
+    },
+    type:{
+        type:String
     }
     
-},
-
-
-
-    {toJSON:{
-        transform:(doc,retuDoc)=>_.omit(retuDoc,['__v'])
-    }}
+},{
+    timestamps: true
+    }
 )
 
 
