@@ -1,6 +1,7 @@
 const catchAsync = require("express-async-handler");
 const petModel = require("../Models/petsModel");
 const usermodel = require("../Models/userModel");
+const shelterModel=require('../Models/shelterModel')
 const appError = require("../utils/appError");
 const multer = require("multer");
 const cloudinary = require("../utils/cloud");
