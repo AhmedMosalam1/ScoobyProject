@@ -3,7 +3,8 @@ const slugify=require('slugify')
 const validator=require('validator')
 //const User=require('./usermodel')
 const serviceProfileModel=require('../Models/serviceProfileModel')
-const doctorModel=require('../Models/doctorModel')
+const doctorModel=require('../Models/doctorModel');
+const shelterModel = require('../Models/shelterModel');
 const reviewSchema=new mongoose.Schema({
     name:{
         type:String
@@ -43,6 +44,11 @@ const reviewSchema=new mongoose.Schema({
             type:mongoose.Schema.ObjectId,
             ref:'user',
            // required:[true,"Review must belong to a user."]
+        }
+        ,shelter:{
+            type:mongoose.Schema.ObjectId,
+            ref:'shelter',
+
         }
     
 
@@ -103,7 +109,7 @@ const stats=await this.aggregate([{
 if(stats.length >0){
     await doctorModel.findByIdAndUpdate(id,{
         rate:stats[0].avgRating, 
-        numberOfRate:stats[0].nRating
+        //numberOfRate:stats[0].nRating
     
     
     })
@@ -157,13 +163,77 @@ reviewSchema.statics.calcAverageRatingofService=async function(id){
     }
 
 
+
+    reviewSchema.statics.calcAverageRatingofShelter=async function(id){
+        const stats=await this.aggregate([{
+            $match:{shelter:id},
+            
+        
+        },{
+            $group:{
+                _id:'$shelter',
+                nRating:{$sum:1},
+                avgRating:{$avg:'$rating'}
+            }
+        }
+        
+        ])
+        
+        
+        //console.log(stats)
+        
+        if(stats.length >0){
+            await shelterModel.findByIdAndUpdate(id,{
+                rate:stats[0].avgRating, 
+                numberOfRates:stats[0].nRating
+            
+            
+            })
+            }else{
+                await shelterModel.findByIdAndUpdate(id,{
+                    rate:4.5, 
+                    numberOfRates:0
+                
+                
+                })
+        
+            }
+        
+        }    
 reviewSchema.post('save',function(){
 //this points to current review
 this.constructor.calcAverageRatings(this.doctor);
 this.constructor.calcAverageRatingofService(this.service);
+this.constructor.calcAverageRatingofShelter(this.shelter);
 
 
 })
+
+// reviewSchema.post('remove', async function(doc) {
+//     // 'this' points to the removed review document
+//     await this.constructor.calcAverageRatings(this.doctor);
+//     await this.constructor.calcAverageRatingofService(this.service);
+// });
+
+///^findOneAnd/
+// reviewSchema.post(/^findByIdAndDelete/, async function(doc) {
+//     try {
+//         // Log the review document being removed
+//         console.log('Review removed:', doc);
+
+//         // Decrement the number of rates
+//         await serviceProfileModel.findByIdAndUpdate(doc.service, {
+//             $inc: { numberOfRate: -1 } // Decrement by 1
+//         });
+
+//         console.log('Number of rates decremented successfully.');
+//     } catch (error) {
+//         console.error('Error decrementing number of rates:', error);
+//     }
+// });
+
+
+// Make sure to update calcAverageRatings and calcAverageRatingofService to handle the decrease in nRating
 
 
 

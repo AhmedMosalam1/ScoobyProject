@@ -116,33 +116,16 @@ exports.updateReview = catchAsync(async (req, res, next) => {
 // });
 
 
-exports.deleteReview =catchAsync(async (req, res, next) => {
-        //const petId = req.params.id
-        try {
-            // Find the review by ID and delete it
-            const deletedReview = await reviewModel.findByIdAndDelete(req.params.id);
-            
-            if (!deletedReview) {
-                return res.status(404).json({ message: 'Review not found' });
-            }
-    
-            // Decrement the number of rates
-            await serviceProfileModel.findByIdAndUpdate(deletedReview.service, {
-                $inc: { numberOfRate: -1 } // Decrement by 1
-            });
-    
-            res.status(200).json({ message: 'Review deleted successfully' });
-        } catch (error) {
-            next(error); // Pass the error to the error handling middleware
-        }
-    });
+
 
 ////////////////////////////////////////////////////////////
 
 exports.getMyReviews=catchAsync(async (req, res, next) => {
-  
+     
+
 
     const Reviews = await reviewModel.find({ user: req.params.id }).select("-__v");
+    
 
     res.status(200).json({
         status: "success",
@@ -151,6 +134,20 @@ exports.getMyReviews=catchAsync(async (req, res, next) => {
     });
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+//****************************************************************/
 exports.createReview = catchAsync(async (req, res, next) => {
     if (req.query.serviceId) {
         
@@ -205,8 +202,55 @@ exports.createReview = catchAsync(async (req, res, next) => {
 
 }
 
+else if(req.query.shelterId){
+    const  shelterId= req.query.shelterId;
+        const userId = req.params.id;
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return next(new appError(`Can't find User on this id`, 404));
+
+        }
+        if (!req.body.shelter) {
+            req.body.shelter =shelterId ;
+            // console.log(req.body.tour)
+        }
+    
+        if (!req.body.user) {
+            req.body.user =userId ;
+        }
+        const newReview = await reviewModel.create(req.body);
+       
+        res.status(201).json({newReview})
+        next();
+
+
+}
+
 }
 )
 
 
+///************************************************** */
+exports.deleteReview =catchAsync(async (req, res, next) => {
+        //const petId = req.params.id
+        try {
+            // Find the review by ID and delete it
+            const deletedReview = await reviewModel.findByIdAndDelete(req.params.id);
+            
+            if (!deletedReview) {
+                return res.status(404).json({ message: 'Review not found' });
+            }
+    
+            // Decrement the number of rates
+            await serviceProfileModel.findByIdAndUpdate(deletedReview.service, {
+                $inc: { numberOfRate: -1 } // Decrement by 1
+            });
+    
+            res.status(200).json({ message: 'Review deleted successfully' });
+        } catch (error) {
+            next(error); // Pass the error to the error handling middleware
+        }
+    });
 

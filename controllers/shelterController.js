@@ -58,38 +58,54 @@ const upload = multer({
     fileFilter: multerFilter
 })
 
-    // await sharp(req.files.projectImage[0].buffer)
-    //     .toFormat('jpeg')
-    //     .jpeg({ quality: 90 })
-    //     .toFile(`upload/project/${req.body.imageCover}`)
+  
 
-    // const result1 = await cloudinary.uploader.upload(`upload/project/${req.body.imageCover}`, {
-    //     public_id: `${Date.now()}_Cover`,
-    //     crop: 'fill',
-    // });
+exports.shelterIamges = (req, res, next) => {
+    upload.fields([
+        //{ name: 'shelterImage', maxCount: 1 },
+        { name: 'shelterImages', maxCount: 5 }
+    ])(req, res, async (err) => {
+        if (err) {
+            return res.status(400).json({ error: 'Failed to upload files' });
+        }
 
-exports.uploadPhoto1 = upload.single('shelterImage') //      <-------
+        const shelterImageFiles = req.files['shelterImage'];
 
-exports.resizePhotoProject = catchAsync(async (req, res, next) => {
+        const shelterImageFile = shelterImageFiles[0];
+        const shelterImageBuffer = await sharp(shelterImageFile.buffer) // Convert to buffer
+            .toFormat('jpeg')
+            .jpeg({ quality: 90 })
+            .toBuffer(); // Convert to buffer
 
-    //----------------------------------------------------------------------------------------shelter image
-    //console.log(req.file);
-    if (!req.file) return next()
+        // Upload doctorImage to Cloudinary
+        const shelterImageResult = await uploadToClodinary(shelterImageBuffer, shelterImageFile.originalname, 'Scooby/Shelters');
+        req.body.shelterImage = shelterImageResult.secure_url;
+      
+        req.body.shelterImages = [];
 
-    const fileName1 = `${req.file.originalname}` 
+        await Promise.all(
+            req.files.shelterImages.map(async (file, i) => {
+                const filename = `shelter-${Date.now()}-${i + 1}.jpeg`;
 
-    // const imageBuffer = await sharp(req.file.buffer)
-    //     .toFormat('jpeg')
-    //     .jpeg({ quality: 90 })
-    //     .toBuffer()
+                const imageBuffer = await sharp(file.buffer)
+                    .toFormat('jpeg')
+                    .jpeg({ quality: 90 })
+                    .toBuffer();
 
-    const filePath1 = `Scooby/shelters` //    <-------
+                const filePath = `Scooby/Shelters`;
+                const result = await uploadToClodinary(imageBuffer, filename, filePath);
+               // console.log(result)
 
-    const result1 = await uploadToClodinary(req.file.buffer, fileName1, filePath1) //
-    req.body.shelterImage = result1.secure_url //    <-------
+                req.body.shelterImages.push(result.secure_url);
+            })
+        );
 
-    next()
-})
+        next();
+    });
+};
+
+
+
 
 const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
     return new Promise((resolve, reject) => {
@@ -108,3 +124,48 @@ const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
         uploadStream.end(buffer)
     })
 }
+
+
+
+exports.updateshelter = catchAsync(async (req, res, next) => {
+  
+        const shelter = await shelterModel.findByIdAndUpdate(req.params.id, req.body, { new: true })
+      
+        if (!shelter) {
+            return next(new appError(`Can't find this shelter`, 404));
+        }
+      
+      
+        res.status(201).json({shelter})
+    })
+    //*********************************************************** */
+
+    exports.getShelter = catchAsync(async (req, res, next) => {
+  
+        const shelter = await shelterModel.findById(req.params.id).populate('reviewsOfShelter')
+     
+        const updatedDoc = await shelterModel.findByIdAndUpdate(req.params.id, { numberOfRates: shelter.reviewsOfShelter.length }, { new: true }).populate('reviewsOfShelter')
+        
+      
+        if (!shelter) {
+            return next(new appError(`Can't find this shelter`, 404));
+        }
+      
+      
+        res.status(201).json(updatedDoc)
+    })
+    //*********************************************************** */
+    exports.getPetsInShelter = catchAsync(async (req, res, next) => {
+  
+        const pets = await petsModel.find({shelterInfo:req.params.id})
+     
+        
+        if (!pets) {
+            return next(new appError(`Can't find this shelter`, 404));
+        }
+      
+      
+        res.status(201).json(pets)
+    })
+
+   

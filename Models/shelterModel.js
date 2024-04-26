@@ -6,6 +6,7 @@ const _ = require('lodash')
 require('dotenv').config();
 
 const shelterSchema = new mongoose.Schema({
+    shelterImages:[String],
     shelterName:{
         type:String
     },
@@ -35,6 +36,8 @@ const shelterSchema = new mongoose.Schema({
         },
         coordinates: [Number],
         address: String,
+    },about:{
+        type:String
     },
     available_places:{
         type:Number
@@ -45,8 +48,17 @@ const shelterSchema = new mongoose.Schema({
     }],
 },{
     timestamps: true,
+    toJSON:{virtuals:true},
+    toObject:{virtuals:true}
 })
 
+
+shelterSchema.virtual('reviewsOfShelter',{
+    ref:'review',
+    foreignField:'shelter',
+    localField:'_id'
+
+})
 const shelterModel = mongoose.model('shelter',shelterSchema);
 
 module.exports = shelterModel
