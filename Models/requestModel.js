@@ -12,6 +12,17 @@ const requestSchema = new mongoose.Schema({
     serviceType:{
         type:String
     },
+    servicePrice:{
+        type:Number
+    },
+    requestTotalPrice:{
+        type:Number
+    },
+    location:
+    {
+        type:[String]
+    },
+    petsId:[String],
     date:{
         type:Date
     },
