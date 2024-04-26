@@ -18,7 +18,7 @@ const requestSchema = new mongoose.Schema({
     requestTotalPrice:{
         type:Number
     },
-    location:[],
+    location:[String],
     petsId:[String],
     date:{
         type:Date
@@ -29,9 +29,6 @@ const requestSchema = new mongoose.Schema({
     duration:{
         type:String,
         enum:['Full Day','Half Day','More than 1 Day']
-    },
-    location:{
-        type: String
     },
     notes:{
         type:String
