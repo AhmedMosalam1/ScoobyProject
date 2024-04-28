@@ -29,6 +29,8 @@ if (process.env.NODE_ENV === "development") {
 app.use(cors())
 app.options('*',cors())
 
+app.post('/webhook-checkout', express.raw({ type: 'application/json' }), webhookCheckout)
+
 app.use(express.json());
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
@@ -49,8 +51,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(compression())
 
-app.use(bodyParser.raw({ type: 'application/json' }));
-app.post('/webhook-checkout', webhookCheckout)
+
 // Routers
 mountRoutes(app)
 
