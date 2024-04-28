@@ -205,7 +205,7 @@ exports.webhookCheckout = catchAsync(async (req, res, next) => {
     );
     console.log("ahmed");
   } catch (err) {
-    console.log(err.payload.type);
+  //console.log(err.payload);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
   console.log(event.type);
