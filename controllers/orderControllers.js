@@ -194,7 +194,7 @@ const createCardOrder = async (session) => {
 
 exports.webhookCheckout = catchAsync(async (req, res, next) => {
   const sig = req.headers["stripe-signature"];
-console.log(sig);
+  //console.log(sig);
   let event;
 
   try {
@@ -203,12 +203,17 @@ console.log(sig);
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
-    console.log(event);
+    console.log("ahmed");
   } catch (err) {
     console.log(err);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
-
+  console.log(event.type);
+  console.log("---------------");
+  console.log(event.payload);
+  console.log("---------------");
+  console.log(event.payload.type);
+  console.log("---------------");
   if (event.type === "checkout.session.completed") {
 
     await createCardOrder(event.data.object);
