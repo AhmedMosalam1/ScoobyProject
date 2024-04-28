@@ -49,7 +49,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(compression())
 
-app.post('/webhook-checkout', express.raw({ type: 'application/json' }), webhookCheckout)
+app.post('/webhook-checkout', bodyParser.raw({ type: 'application/json' }), webhookCheckout)
 // Routers
 mountRoutes(app)
 
