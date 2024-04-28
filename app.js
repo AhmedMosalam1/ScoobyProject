@@ -49,7 +49,8 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(compression())
 
-app.post('/webhook-checkout', bodyParser.raw({ type: 'application/json' }), webhookCheckout)
+app.use(bodyParser.raw({ type: 'application/json' }));
+app.post('/webhook-checkout', webhookCheckout)
 // Routers
 mountRoutes(app)
 
