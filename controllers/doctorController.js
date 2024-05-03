@@ -106,8 +106,7 @@ exports.createdoctor=catchAsync(async(req,res,next)=>{
 
     const newdoctor=await doctormodel.create(req.body)
     res.status(201).json({
-        status:'success',
-        data:newdoctor
+          newdoctor
     })
 
 })
@@ -120,8 +119,7 @@ exports.getdoctors=catchAsync(async(req,res,next)=>{
     const doctors=await doctormodel.find().populate('reviewsOfDoctor') 
  if(doctors){
     res.status(200).json({
-        status:'success',
-          data:doctors
+        doctors
       })
 
  }else{
@@ -174,10 +172,7 @@ exports.getdoctors=catchAsync(async(req,res,next)=>{
       
       
         res.status(201).json({
-            status: "success",
-            data: {
-                data: doctor
-            }
+            doctor
         })
       })
 
@@ -217,11 +212,6 @@ const updatedDoc = await doctormodel.findByIdAndUpdate(req.params.id, { numberOf
     }
 
     res.status(201).json({
-        status: "success",
-        
-        data: {
-            data: updatedDoc,
-            reviewsofDctors:doc.reviewsOfDoctor.length,
-        }
+        updatedDoc
     })
 })
