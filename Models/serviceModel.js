@@ -9,27 +9,6 @@ const serviceSchema = new mongoose.Schema({
     serviceType:{
         type:String
     },
-    nationalID:{
-        type:String,
-    },
-    workplace:{
-        type:String,
-    },
-    licenseImage:{
-        type:String,
-    },
-    country:{
-        type: String
-    },
-    personalID:{
-        type:String
-    },
-    carImage:{
-        type:String
-    },
-    gender:{
-        type:String
-    },
     city:{
         type:String
     },
@@ -44,10 +23,8 @@ const serviceSchema = new mongoose.Schema({
     },
      pricePer:{
         type:String
-    },
-    phone:{
-        type: Number
-    },serviceProfile:{
+    }
+    ,serviceProfile:{
         type:mongoose.Schema.ObjectId,
             ref:'serviceProfile',
     }
