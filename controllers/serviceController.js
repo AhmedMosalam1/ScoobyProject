@@ -14,7 +14,7 @@ exports.createService = catchAsync(async(req,res)=>{
     const service = await serviceModel.create(req.body)
     // const user = await userModel.findById(req.params.id)
     // user.services_id.push(service.id)
-    await user.save();
+    // await user.save();
     res.status(200).json({
         service
     })
