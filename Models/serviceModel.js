@@ -42,6 +42,9 @@ const serviceSchema = new mongoose.Schema({
     price:{
         type:Number
     },
+     pricePer:{
+        type:String
+    },
     phone:{
         type: Number
     },serviceProfile:{
