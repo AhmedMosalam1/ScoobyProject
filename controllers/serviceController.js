@@ -9,6 +9,17 @@ const cloudinary = require("../utils/cloud")
 const sharp = require("sharp")
 //process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
+function shuffleServices(array) {
+    // Loop over the array from the end to the beginning
+    for (let i = array.length - 1; i > 0; i--) {
+        // Generate a random index between 0 and i
+        const j = Math.floor(Math.random() * (i + 1));
+        // Swap the elements at positions i and j
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
 //-------------------------------------------------------------create service
 exports.createService = catchAsync(async(req,res)=>{
     const service = await serviceModel.create(req.body)
@@ -23,13 +34,10 @@ exports.createService = catchAsync(async(req,res)=>{
 //-------------------------------------------------------------get all services
 exports.getAllServices = catchAsync(async(req,res)=>{
     const allServices = await serviceModel.find()
+    const shuffledServices  = shuffleServices(allServices)
     res.status(200).json({
-        // image : allServices.serviceImage,
-        // type : allServices.serviceType ,
-        // rate: allServices.rate ,
-        // country : allServices.country ,
-        // price : allServices.price ,
-        allServices
+        length:shuffledServices.length,
+        shuffledServices
     })
     
 })
@@ -43,8 +51,10 @@ exports.getService = catchAsync(async(req,res)=>{
     }else{
         services = await serviceModel.find({serviceType:serviceType})
     }
+    const shuffledServices  = shuffleServices(services)
     res.status(200).json({
-        services
+        length:shuffledServices.length,
+        shuffledServices
     })
     
 })
