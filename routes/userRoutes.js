@@ -4,15 +4,15 @@ const router = express.Router();
 const userController = require('../controllers/userControllers')
 const authController = require("../controllers/authController")
 
-//router.use(authController.protect)
 
 router.get('/getalluser',userController.getAll)
 router.delete('/deleteuser',userController.deleteAll)
 
-router.get("/getuser/:id",userController.getOne)
 router.patch("/updateuser/:id",userController.setUserIds,userController.uploadPhoto,userController.resizePhotoProject,userController.updateOne)
 router.patch("/followunfollowuser/:id",userController.followUnFollowUser)
 router.delete('/deleteuser/:id',userController.deleteOne)
 
+router.use(authController.protect)
+router.get("/getuser",userController.getOne)
 
 module.exports = router

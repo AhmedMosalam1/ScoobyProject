@@ -91,7 +91,7 @@ exports.deleteAll = catchAsync(async (req, res, next) => {
 
 exports.getOne = catchAsync(async (req, res, next) => {
 
-    let doc = await User.findById(req.params.id).populate('pet')//.populate('services_id')
+    let doc = await User.findById(req.user.id).populate('pet')//.populate('services_id')
 
     if (!doc) {
         return next(new appError(`Can't find User on this id`, 404));

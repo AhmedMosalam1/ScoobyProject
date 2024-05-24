@@ -58,11 +58,7 @@ const orderSchema = new mongoose.Schema(
 //     path: 'cartItems.product',
 //     select: 'title imageCover ',
 //   });
-
 //   next();
 // });
 
 module.exports = mongoose.model('order', orderSchema);
-
-// In@in2016
-//progahmedelsayed@gmail.com
