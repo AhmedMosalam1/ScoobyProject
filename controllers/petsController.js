@@ -302,4 +302,42 @@ exports.deletepet = catchAsync(async(req,res,next)=>{
   })
 })
 
+//***************************************** */
+exports.filterdogsforkids=catchAsync(async (req, res, next) => {
+  const pets = await petModel.find({
+    type:'dog',
+    petsforkids:true
+    //owner:'adoption'
+  });
+  //console.log(req.query)
+  
 
+  //console.log(pets)
+  if (!pets) {
+    return next(new appError(`cant find my pets`, 404));
+  }
+  res.status(200).json({
+    status: "success",
+    data: pets,
+  });
+});
+//********************************************** */
+exports.filtercatsforkids=catchAsync(async (req, res, next) => {
+  const pets = await petModel.find({
+    type:'cat',
+    petsforkids:true,
+    //owner:'adoption'
+
+  });
+  //console.log(req.query)
+  
+
+  //console.log(pets)
+  if (!pets) {
+    return next(new appError(`cant find my pets`, 404));
+  }
+  res.status(200).json({
+    status: "success",
+    data: pets,
+  });
+});
