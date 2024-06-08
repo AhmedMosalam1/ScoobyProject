@@ -85,7 +85,10 @@ const petSchema = new mongoose.Schema({
     },
     vaccinations_id:[{
         type:String 
-    }]
+    }],
+    petsforkids:{
+        type:Boolean
+    }
 },
 
     {
