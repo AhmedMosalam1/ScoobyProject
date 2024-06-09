@@ -21,7 +21,7 @@ function shufflePosts(array) {
 
 //-------------------------------------------------------------add post
 exports.addPost = catchAsync(async(req,res,next)=>{
-    const userId = req.params.id
+    const userId = req.user.id
     const user = await userModel.findById(userId)
     const userImage = user.profileImage
     const userName = user.name
@@ -44,15 +44,20 @@ exports.addPost = catchAsync(async(req,res,next)=>{
 //-------------------------------------------------------------get all posts
 exports.getAllPosts = catchAsync(async(req,res)=>{
     const allPosts = await communityModel.find({onlyMe:false})
-    const shuffledPosts = await shufflePosts(allPosts)
+    const userId = req.user._id;
+    let shuffledPosts = await shufflePosts(allPosts)
+
+    const processedPosts = await Promise.all(shuffledPosts.map(async (post) => {
+        const userLikedThisPost = post.likes_Id.includes(userId);
+        return {post, liked: userLikedThisPost };
+    }));
     res.status(200).json({
-        shuffledPosts
+        processedPosts
     })
-    
 })
 //-------------------------------------------------------------delete post
 exports.deletePost = catchAsync(async(req,res)=>{
-    const post = req.params.id
+    const post = req.user.id
     if(!post){
         return next(new appError('post not found',400))
     }
@@ -63,7 +68,7 @@ exports.deletePost = catchAsync(async(req,res)=>{
 })
 //-------------------------------------------------------------edit post
 exports.editPost = catchAsync(async(req,res)=>{
-    const postId = req.params.id
+    const postId = req.user.id
     const newDescription = req.body.description
     //console.log(req.body.description)
     const post = await communityModel.findByIdAndUpdate(postId,{
@@ -76,8 +81,9 @@ exports.editPost = catchAsync(async(req,res)=>{
 })
 //-------------------------------------------------------------Like & disLike
 exports.likeAndDisLike = catchAsync(async(req,res,next)=>{
-    const currentUser = await userModel.findById(req.params.id)
+    const currentUser = await userModel.findById(req.user.id)
     let post = await communityModel.findById(req.query.postId)
+    let liked
     if(!currentUser){
         return next(new appError('You should login first'),401)
     }
@@ -85,19 +91,25 @@ exports.likeAndDisLike = catchAsync(async(req,res,next)=>{
     if(isLiked){
         //disLike
         post = await communityModel.findByIdAndUpdate(post._id, { $pull: { likes_Id: currentUser._id }, $inc: { likesNumber: -1 } }, { new: true })
-        res.status(200).json({post})
+        liked = false
+        res.status(200).json({post,liked})
     }else{
         //like
         post = await communityModel.findByIdAndUpdate(post._id, { $push: { likes_Id: currentUser._id }, $inc: { likesNumber: 1 } }, { new: true })
-        res.status(200).json({post})
+        liked = true
+        res.status(200).json({post,liked})
     }
 })
 //-------------------------------------------------------------get my moments
 exports.getMyMoments = catchAsync(async(req,res)=>{
-    const userId = req.params.id ;
+    const userId = req.user.id ;
     const MyMoments = await communityModel.find({userId:userId})
+    const processedPosts = await Promise.all(MyMoments.map(async (post) => {
+        const userLikedThisPost = post.likes_Id.includes(userId);
+        return {post, liked: userLikedThisPost };
+    }));
     res.status(200).json({
-        MyMoments
+        processedPosts
     })
     
 })

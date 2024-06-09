@@ -13,7 +13,7 @@ require("dotenv").config();
 
 //-------------------------------------------------------------add request
 exports.addRequest = catchAsync(async (req, res, next) => {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const { cardNumber, cardExpireDate, cardSecurityCode } = req.body;
 
     if (req.body.saveCard) {
@@ -42,7 +42,7 @@ exports.addRequest = catchAsync(async (req, res, next) => {
 });
 //-------------------------------------------------------------upcoming booking
 exports.upcomingBooking = catchAsync(async (req, res) => {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const request = await requestModel.find({
         userId: userId,
         date: { $gt: Date.now() },
@@ -53,7 +53,7 @@ exports.upcomingBooking = catchAsync(async (req, res) => {
 });
 //-------------------------------------------------------------past booking
 exports.pastBooking = catchAsync(async (req, res) => {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const request = await requestModel.find({
         userId: userId,
         date: { $lt: Date.now() },

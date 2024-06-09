@@ -36,7 +36,6 @@ exports.getDoctorByName = catchAsync(async(req,res,next)=>{
     res.status(200).json({
         doctor
     })
-    
 })
 //-------------------------------------------------------------delete vaccine
 exports.deleteVaccine = catchAsync(async(req,res,next)=>{

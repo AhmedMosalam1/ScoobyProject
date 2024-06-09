@@ -12,7 +12,7 @@ const reminderModel = require('../Models/reminderModel');
 
 //-------------------------------------------------------------add reminder
 exports.addreminder = catchAsync(async(req,res,next)=>{
-    const userId = req.params.id
+    const userId = req.user.id
     const remender = await remenderModel.create({
         userId,
         ...req.body
@@ -23,7 +23,7 @@ exports.addreminder = catchAsync(async(req,res,next)=>{
 })
 //-------------------------------------------------------------get my reminders info
 exports.getMyRemindersInfo = catchAsync(async(req,res,next)=>{
-    const userId = req.params.id
+    const userId = req.user.id
     const userReminders = await remenderModel.find({userId:userId})
     const todayDate = new Date().getDate();
     const todayReminders = userReminders.filter(reminder => {
@@ -42,13 +42,23 @@ exports.getMyRemindersInfo = catchAsync(async(req,res,next)=>{
 })
 //-------------------------------------------------------------get upcomming reminders
 exports.getUpcommingReminders = catchAsync(async(req,res,next)=>{
-    const userId = req.params.id
+    const userId = req.user.id
     const upCommingReminders = await remenderModel.find({
         userId:userId,
         date: { $gt: Date.now() }
     });
     res.status(200).json({
         upCommingReminders
+    })
+})
+//-------------------------------------------------------------get all reminders
+exports.getAllReminders = catchAsync(async(req,res,next)=>{
+    const userId = req.user.id
+    const getAllReminders = await remenderModel.find({
+        userId:userId,
+    });
+    res.status(200).json({
+        getAllReminders
     })
 })
 //-------------------------------------------------------------delete reminder

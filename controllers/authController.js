@@ -323,7 +323,7 @@ exports.getresetpass = catchAsync(async (req, res, next) => {
     status: "success",
   });
 });
-//--------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------- 
 
 exports.protect = catchAsync(async (req, res, next) => {
   let token

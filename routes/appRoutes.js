@@ -20,6 +20,7 @@ const serviceProfileRoutes = require("./serviceProfileRoutes")
 const vaccineRoutes = require('./vaccineRoutes')
 const reminderRoutes = require('./reminderRoutes')
 const orderRoutes = require("./orderRoutes")
+const ocrRoutes = require('./ocrRoutes')
 
 const mountRoutes = (app) => {
     app.use('/scooby/api/users', authRouter)
@@ -44,5 +45,6 @@ const mountRoutes = (app) => {
     app.use('/scooby/api/vaccine', vaccineRoutes)
     app.use('/scooby/api/reminder', reminderRoutes)
     app.use('/scooby/api/order', orderRoutes)
+    app.use('/scooby/api/ocr',ocrRoutes)
 }
 module.exports = mountRoutes; 

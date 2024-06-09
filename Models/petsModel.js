@@ -88,8 +88,6 @@ const petSchema = new mongoose.Schema({
     }],
     petsforkids:{
         type:Boolean
-    },successflyAdaped:{
-        type:Boolean
     }
 },
 
