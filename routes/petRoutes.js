@@ -17,6 +17,8 @@ router.get('/adoptMe',petContrller.availableforadoption)
 router.get('/filtertest',petContrller.filtertest)
 router.get('/filterdogsforkids',petContrller.filterdogsforkids)
 router.get('/filtercatsforkids',petContrller.filtercatsforkids)
+router.get('/successfullyAdaped',petContrller.successAdapted)
+
 
 
 router.get('/getallpets',petContrller.getpets)
