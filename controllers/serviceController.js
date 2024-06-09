@@ -33,7 +33,7 @@ exports.createService = catchAsync(async(req,res)=>{
 })
 //-------------------------------------------------------------get all services
 exports.getAllServices = catchAsync(async(req,res)=>{
-    const allServices = await serviceModel.find()
+    const allServices = await serviceModel.find().populate('serviceProfile')
     const shuffledServices  = shuffleServices(allServices)
     res.status(200).json({
         length:shuffledServices.length,
