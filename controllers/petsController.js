@@ -11,7 +11,8 @@ const sharp = require("sharp");
 
 exports.setUserIds = (req, res, next) => {
   if (!req.body.user) {
-    req.body.user = req.params.id; 
+    req.body.user = req.user.id; 
+    console.log(req.user.id)
     //req.user.id = req.params.id
     // console.log(req.body.user)
   }
@@ -199,7 +200,7 @@ exports.availableforadoption=catchAsync(async (req, res, next) => {
 
 //*************************************************** */
 exports.getmypets = catchAsync(async (req, res, next) => {
-  const pets = await petModel.find({ user: req.params.id });
+  const pets = await petModel.find({ user: req.user.id });
 
   //console.log(pets)
   if (!pets) {
@@ -209,14 +210,16 @@ exports.getmypets = catchAsync(async (req, res, next) => {
     status: "success",
     data: pets,
   });
+  next()
 });
 
 //*********************************************** */
 
 exports.addpettouser = catchAsync(async (req, res, next) => {
-  req.body.user = req.params.id
+  // req.body.user = req.user.id
+  // console.log(req.user.id)
   const newpet = await petModel.create(req.body);
-  const user = await usermodel.findById(req.params.id);
+  const user = await usermodel.findById(req.user.id);
   //console.log(user)
   user.pets.push(newpet.id);
   
@@ -342,7 +345,8 @@ exports.filtercatsforkids=catchAsync(async (req, res, next) => {
   });
 });
 
-//*******************************************************
+
+//******************************************** */
 exports.successAdapted=catchAsync(async (req, res, next) => {
   const pets = await petModel.find({
     successflyAdaped:true,
@@ -360,3 +364,5 @@ exports.successAdapted=catchAsync(async (req, res, next) => {
     data: pets,
   });
 });
+
+
