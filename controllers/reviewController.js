@@ -136,8 +136,8 @@ exports.updateReview = catchAsync(async (req, res, next) => {
 exports.getMyReviews=catchAsync(async (req, res, next) => {
      
 
-
-    const Reviews = await reviewModel.find({ user: req.params.id }).select("-__v");
+    const userid=req.user.id
+    const Reviews = await reviewModel.find({ user: userid }).select("-__v");
     
 
     res.status(200).json({
@@ -146,7 +146,6 @@ exports.getMyReviews=catchAsync(async (req, res, next) => {
         data: { Reviews },
     });
 });
-
 
 
 
