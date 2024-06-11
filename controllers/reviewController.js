@@ -41,6 +41,19 @@ exports.setDoctorsUserIds = (req, res, next) => {
     }
     next();
 };
+//*************************************************/
+exports.setShelterUserIds = (req, res, next) => {
+    //Allow nested routes
+    if (!req.body.shelter) {
+        req.body.shelter = req.params.id;
+        // console.log(req.body.tour)
+    }
+
+    if (!req.body.user) {
+        req.body.user = req.user.id;
+    }
+    next();
+};
 
 //*************************************************** */
 // exports.createReview = catchAsync(async (req, res, next) => {
@@ -148,11 +161,11 @@ exports.getMyReviews=catchAsync(async (req, res, next) => {
 
 
 //****************************************************************/
-exports.createReview = catchAsync(async (req, res, next) => {
-    if (req.query.serviceId) {
+exports.createReviewSerivce = catchAsync(async (req, res, next) => {
+   
         
-        const serviceId = req.query.serviceId;
-        const userId = req.params.id;
+        const serviceId = req.params.id;
+        const userId = req.user.id;
 
         const user = await User.findById(userId);
 
@@ -165,9 +178,6 @@ exports.createReview = catchAsync(async (req, res, next) => {
             // console.log(req.body.tour)
         }
     
-        if (!req.body.user) {
-            req.body.user =userId ;
-        }
         const newReview = await reviewModel.create(req.body);
        
         res.status(201).json({newReview})
@@ -176,57 +186,63 @@ exports.createReview = catchAsync(async (req, res, next) => {
 
        
 
-}else if(req.query.doctorId){
-    const  doctorId= req.query.doctorId;
-        const userId = req.params.id;
+    }
+)
 
-        const user = await User.findById(userId);
+//************************************************************/
+exports.createReviewDoctor = catchAsync(async (req, res, next) => {
+   
+        
+    const doctorId = req.params.id;
+    const userId = req.user.id;
 
-        if (!user) {
-            return next(new appError(`Can't find User on this id`, 404));
+    const user = await User.findById(userId);
 
-        }
-        if (!req.body.doctor) {
-            req.body.doctor =doctorId ;
-            // console.log(req.body.tour)
-        }
-    
-        if (!req.body.user) {
-            req.body.user =userId ;
-        }
-        const newReview = await reviewModel.create(req.body);
-       
-        res.status(201).json({newReview})
-        next();
+    if (!user) {
+        return next(new appError(`Can't find User on this id`, 404));
 
+    }
+    if (!req.body.doctor) {
+        req.body.doctor =doctorId ;
+        // console.log(req.body.tour)
+    }
+
+    const newReview = await reviewModel.create(req.body);
+   
+    res.status(201).json({newReview})
+    next();
+
+
+   
 
 }
+)
 
-else if(req.query.shelterId){
-    const  shelterId= req.query.shelterId;
-        const userId = req.params.id;
+//********************************************************/
+exports.createReviewShelter = catchAsync(async (req, res, next) => {
+   
+        
+    const shelterId = req.params.id;
+    const userId = req.user.id;
 
-        const user = await User.findById(userId);
+    const user = await User.findById(userId);
 
-        if (!user) {
-            return next(new appError(`Can't find User on this id`, 404));
+    if (!user) {
+        return next(new appError(`Can't find User on this id`, 404));
 
-        }
-        if (!req.body.shelter) {
-            req.body.shelter =shelterId ;
-            // console.log(req.body.tour)
-        }
-    
-        if (!req.body.user) {
-            req.body.user =userId ;
-        }
-        const newReview = await reviewModel.create(req.body);
-       
-        res.status(201).json({newReview})
-        next();
+    }
+    if (!req.body.shelter) {
+        req.body.shelter =shelterId ;
+        // console.log(req.body.tour)
+    }
+
+    const newReview = await reviewModel.create(req.body);
+   
+    res.status(201).json({newReview})
+    next();
 
 
-}
+   
 
 }
 )
