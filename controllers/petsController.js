@@ -294,15 +294,35 @@ exports.updatepet = catchAsync(async (req, res, next) => {
 
 //************************************************************* */
 exports.deletepet = catchAsync(async(req,res,next)=>{
-  //const petId = req.params.id
-  const pet = await petModel.findByIdAndDelete(req.params.id)
-  if(!pet){
-      return next(new appError('pet not found',400))
-  }
+  // //const petId = req.params.id
+  // const pet = await petModel.findByIdAndDelete(req.params.id)
+  // if(!pet){
+  //     return next(new appError('pet not found',400))
+  // }
   
+  // res.status(200).json({
+  //     message:'pet deleted successfully'
+  // })
+  const petId = req.params.id;
+
+  // Find and delete the pet
+  const pet = await petModel.findByIdAndDelete(petId);
+  if (!pet) {
+    return next(new appError('Pet not found', 400));
+  }
+
+  // Find the user and remove the pet ID from the user's pets array
+  const user = await usermodel.findById(pet.user); // Assuming pet.user stores the user ID
+  if (!user) {
+    return next(new appError('User not found', 400));
+  }
+
+  user.pets = user.pets.filter(id => id.toString() !== petId.toString());
+  await user.save();
+
   res.status(200).json({
-      message:'pet deleted successfully'
-  })
+    message: 'Pet deleted successfully',
+  });
 })
 
 //***************************************** */
