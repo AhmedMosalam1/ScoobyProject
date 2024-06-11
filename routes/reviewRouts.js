@@ -24,7 +24,7 @@ router.get('/getAllReview/:id',reviewController.getAllReview)
 
 router.delete('/deleteReview/:id',reviewController.deleteReview)
 router.patch('/updateReview/:id',reviewController.updateReview)
-router.get('/getMyReviews/:id',reviewController.getMyReviews)
+router.get('/getMyReviews',reviewController.getMyReviews)
 //router.get('/getAllAppReviews',reviewController.getAllAppReviews)
 
 
