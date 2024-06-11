@@ -6,13 +6,13 @@ const authController = require("../controllers/authController")
 
 
 router.get('/getalluser',userController.getAll)
-router.delete('/deleteuser',userController.deleteAll)
-
-router.patch("/updateuser/:id",userController.setUserIds,userController.uploadPhoto,userController.resizePhotoProject,userController.updateOne)
-router.patch("/followunfollowuser/:id",userController.followUnFollowUser)
-router.delete('/deleteuser/:id',userController.deleteOne)
+router.get('/getOneUser/:id',userController.getOneUser)
 
 router.use(authController.protect)
 router.get("/getuser",userController.getOne)
+router.patch("/updateuser",userController.uploadPhoto,userController.resizePhotoProject,userController.updateOne)
+router.patch("/followunfollowuser/:id",userController.followUnFollowUser)
+router.delete('/deleteuser',userController.deleteAll)
+router.delete('/deleteuser/:id',userController.deleteOne)
 
 module.exports = router
