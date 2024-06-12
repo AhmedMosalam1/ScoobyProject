@@ -35,7 +35,7 @@ async function getClassificationResult(imageUrl) {
 //---------------------------------------------------------------------------- upload image to draft 
 exports.setUserIds = (req, res, next) => {
   if (!req.body.userId) {
-    req.body.userId = req.params.id; 
+    req.body.userId = req.user.id; 
     //req.user.id = req.params.id
     // console.log(req.body.user)
   }
