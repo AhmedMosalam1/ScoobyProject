@@ -123,7 +123,8 @@ exports.filteradapt=catchAsync(async (req, res, next) => {
     data: pets,
   });
 });
-//*******************************************
+
+//************************************************************ */
 exports.filteradaptcat=catchAsync(async (req, res, next) => {
   const pets = await petModel.find({
     owner:'adoption',
@@ -159,6 +160,7 @@ exports.filteradaptdog=catchAsync(async (req, res, next) => {
     data: pets,
   });
 });
+
 
 //************************************************************* */
 exports.filtertest=catchAsync(async (req, res, next) => {
