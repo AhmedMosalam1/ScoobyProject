@@ -12,7 +12,7 @@ router.post('/addpet-shelter/:id',petContrller.uploadPhoto,petContrller.resizePh
 router.post('/addpet',petContrller.uploadPhoto,petContrller.resizePhotoProject,petContrller.setUserIds,petContrller.addpet)
 router.get('/get-top-collection',petContrller.filteradapt)
 
-router.get('/get-top-collection-cat',petContrller.filteradaptcat)
+router.get('/get-top-collectioncat',petContrller.filteradaptcat)
 router.get('/get-top-collection-dog',petContrller.filteradaptdog)
 
 router.get('/getcats',petContrller.filtercats)
