@@ -98,15 +98,6 @@ const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
 
 
 
-
-
-
-
-
-
-
-
-
 exports.filteradapt=catchAsync(async (req, res, next) => {
   const pets = await petModel.find({
     owner:'adoption'
@@ -142,7 +133,7 @@ exports.filteradaptcat=catchAsync(async (req, res, next) => {
     data: pets,
   });
 });
-//********************************************* */
+
 exports.filteradaptdog=catchAsync(async (req, res, next) => {
   const pets = await petModel.find({
     owner:'adoption',
