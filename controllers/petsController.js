@@ -124,7 +124,7 @@ exports.filteradapt=catchAsync(async (req, res, next) => {
   });
 });
 
-//************************************************************ */
+
 exports.filteradaptcat=catchAsync(async (req, res, next) => {
   const pets = await petModel.find({
     owner:'adoption',
