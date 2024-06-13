@@ -1,5 +1,6 @@
 const express = require('express')
 //const {createPlog}=require('../controllers/plogContrller')
+const authController=require('../controllers/authController')
 const foundedControlller= require('../controllers/foundedController')
 const router = express.Router();
 
