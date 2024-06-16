@@ -5,6 +5,7 @@ const cloudinary = require("../utils/cloud");
 const FoundedModel = require("../Models/foundedModel");
 const multer = require("multer");
 const sharp = require("sharp");
+const resemble = require("resemblejs");
 
 let image;
 //------------------------------------------------------------- upload image
@@ -66,6 +67,7 @@ const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
 };
 //------------------------------------------------------------- classification
 async function getClassificationResult(imageUrl) {
+
     try {
         const response = await axios.get(
             `https://scoopy-ai-api.onrender.com/clssification?image=${encodeURIComponent(
@@ -77,17 +79,28 @@ async function getClassificationResult(imageUrl) {
         return new appError("Error in classification function");
     }
 }
+
 //------------------------------------------------------------- similarity
 async function getSimilarityDistance(file1Url, file2Url) {
     try {
-        const response = await axios.get(
-            `https://scoopy-ai-api.onrender.com/distance?file1=${encodeURIComponent(
-                file1Url
-            )}&file2=${encodeURIComponent(file2Url)}`
-        );
-        return response.data;
+        // تحميل الصور من URLs وتحويلها إلى Buffers
+        const response1 = await axios.get(file1Url, { responseType: 'arraybuffer' });
+        const response2 = await axios.get(file2Url, { responseType: 'arraybuffer' });
+
+        const buffer1 = Buffer.from(response1.data, 'binary');
+        const buffer2 = Buffer.from(response2.data, 'binary');
+
+        // استخدام resemble لمقارنة الصور
+        return new Promise((resolve, reject) => {
+            resemble(buffer1)
+                .compareTo(buffer2)
+                .onComplete((data) => {
+                    resolve(data);
+                });
+        });
     } catch (error) {
-        return new appError("Error in similarity function");
+        console.error(error);
+        throw new appError("Error in similarity function");
     }
 }
 //------------------------------------------------------------- get founded pets
@@ -102,11 +115,12 @@ exports.missing = catchAsync(async (req, res, next) => {
 
     //Classify the image
     const classificationResult = await getClassificationResult(image);
+    //console.log(classificationResult.Calss);
     console.log(classificationResult.Calss);
     console.log("--------------------");
 
     // Check classification result
-    if (!classificationResult.Calss) {
+    if (!classificationResult) {
         return next(new appError("Please enter image again", 404));
     } else if (classificationResult.Calss === "other") {
         return next(
@@ -117,20 +131,20 @@ exports.missing = catchAsync(async (req, res, next) => {
         );
     } else {
         try {
-                //Get founded cats from cloudinary
-                let result ;
-                if(classificationResult.Calss === "cat"){
-                    result = await cloudinary.api.resources({
-                        type: "upload",
-                        prefix: "Scooby/Missing/Founded/Cats",
-                    });
-                }else if(classificationResult.Calss === "dog"){
-                    result = await cloudinary.api.resources({
-                        type: "upload",
-                        prefix: "Scooby/Missing/Founded/Dogs",
-                    });
-                }
-                
+            //Get founded cats from cloudinary
+            let result;
+            if(classificationResult.Calss === "cat"){
+                result = await cloudinary.api.resources({
+                    type: "upload",
+                    prefix: "Scooby/Missing/Founded/Cats",
+                });
+            } else if(classificationResult.Calss === "dog"){
+                result = await cloudinary.api.resources({
+                    type: "upload",
+                    prefix: "Scooby/Missing/Founded/Dogs",
+                });
+            }
+
             const foundedPets = result.resources.map((obj) => obj.secure_url);
 
             console.log(foundedPets);
@@ -140,22 +154,19 @@ exports.missing = catchAsync(async (req, res, next) => {
             let similarityArray = [];
 
             for (let i = 0; i < foundedPets.length; i++) {
-                let similarity;
-                while (!similarity) {
-                    similarity = await getSimilarityDistance(image, foundedPets[i]);
-                }
-                
+                let similarity = await getSimilarityDistance(image, foundedPets[i]);
+
                 let user = await FoundedModel.find({ petImage: foundedPets[i] });
                 let userId = user[0].userId;
-                let description = user[0].description
-                let location = user[0].locations
-                let phoneNumber = user[0].phoneNumber
-                let createdAt = user[0].createdAt
-                console.log(similarity.Similarity);
+                let description = user[0].description;
+                let location = user[0].locations;
+                let phoneNumber = user[0].phoneNumber;
+                let createdAt = user[0].createdAt;
+                console.log(similarity);
                 console.log(user[0]);
                 console.log("--------------------");
                 similarityArray.push({
-                    similarity: similarity.Similarity,
+                    similarity: 100 - similarity.rawMisMatchPercentage,
                     url: foundedPets[i],
                     description,
                     userId,
@@ -164,15 +175,10 @@ exports.missing = catchAsync(async (req, res, next) => {
                     createdAt
                 });
             }
-            let filteredArray = similarityArray.filter(item => typeof item.similarity !== 'undefined');
-            console.log(filteredArray)
+            let sortedSimilarityArray = similarityArray.sort((a, b) => b.similarity - a.similarity);
+            console.log(sortedSimilarityArray);
             console.log("--------------------");
-            let sortedSimilarityArray =filteredArray.sort((a, b) => b.similarity - a.similarity);
-            console.log(sortedSimilarityArray)
-            console.log("--------------------");
-            // Send similarity array as response
             res.status(200).json({ similarityArray: sortedSimilarityArray.slice(0, 2) });
-
             console.log("End......");
         } catch (err) {
             return next(new appError("Error in processing the request", 500));

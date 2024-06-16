@@ -87,23 +87,18 @@ exports.ocr = catchAsync(async (req, res, next) => {
     console.log("----------------------");
     console.log(finalResult);
     console.log("----------------------");
-    finalResult = finalResult.map(word => {
-        const wordArray = word.split(' ');
-        const capitalizedWordArray = wordArray.map(word => {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-        });
-        return capitalizedWordArray.join(' ');
-    });
-    console.log(finalResult);
-    console.log("----------------------");
+
     const products = await Promise.all(finalResult.map(async (element) => {
-        let product = await productModel.findOne({ name: element });
-        return product;
+        if (element.trim() !== '') {
+            const product = await productModel.findOne({ name: { $regex: element, $options: 'i' } });
+            return product;
+        }
+        return null;
     }));
-    //console.log(products);
-    //console.log("----------------------");
-    res.status(200).json({products})
 
+    const filteredProducts = products.filter(product => product !== null);
 
-    next();
+    console.log(filteredProducts);
+    console.log("----------------------");
+    res.status(200).json({filteredProducts});
 });
