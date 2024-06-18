@@ -13,6 +13,7 @@ router.post('/addpet',petContrller.uploadPhoto,petContrller.resizePhotoProject,p
 router.get('/get-top-collection',petContrller.filteradapt)
 router.get('/get-top-collection-cat',petContrller.filteradaptcat)
 router.get('/get-top-collection-dog',petContrller.filteradaptdog)
+router.get('/getallpetsquery',petContrller.getallpetsquery)
 
 router.get('/getcats',petContrller.filtercats)
 router.get('/getdogs',petContrller.filterdogs)
