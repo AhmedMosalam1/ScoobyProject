@@ -414,4 +414,23 @@ exports.successAdapted=catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getallpetsquery=catchAsync(async (req, res, next) => {
+  if(req.query.type){
+    const typee=req.query.type
+    if(typee=='cat'|| typee=='dog'){
+    const pets = await petModel.find({type:typee});
+    res.status(200).json({
+      status: "success",
+      data: pets,
+    });
+  }
+  else if(typee=='all'){
+    const pets = await petModel.find();
+    res.status(200).json({
+      status: "success",
+      data: pets,
+    });
+  }
+  }
+});
 
