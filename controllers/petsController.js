@@ -239,7 +239,6 @@ exports.getmypets = catchAsync(async (req, res, next) => {
     status: "success",
     data: pets,
   });
-  next()
 });
 
 //*********************************************** */
