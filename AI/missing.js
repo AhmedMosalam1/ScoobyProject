@@ -133,12 +133,12 @@ exports.missing = catchAsync(async (req, res, next) => {
         try {
             //Get founded cats from cloudinary
             let result;
-            if(classificationResult.Calss === "cat"){
+            if(classificationResult.Calss === "Cat"){
                 result = await cloudinary.api.resources({
                     type: "upload",
                     prefix: "Scooby/Missing/Founded/Cats",
                 });
-            } else if(classificationResult.Calss === "dog"){
+            } else if(classificationResult.Calss === "Dog"){
                 result = await cloudinary.api.resources({
                     type: "upload",
                     prefix: "Scooby/Missing/Founded/Dogs",
