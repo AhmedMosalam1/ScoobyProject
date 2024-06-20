@@ -109,13 +109,13 @@ exports.resizePhotoProjectCatOrDog = catchAsync(async (req, res, next) => {
   console.log('---------------------');
 
   // Proceed based on the classification result
-  if (classificationResult.Calss === "cat") {
+  if (classificationResult.Calss === "Cat") {
     req.body.type = 'cat'
     const filePathCat = `Scooby/Missing/Founded/Cats`;
     const fileName = req.body.petImage;
     const resultCat = await uploadToClodinary(imageBuffer, fileName, filePathCat);
     req.body.petImage = resultCat.secure_url;
-  } else if (classificationResult.Calss === "dog") {
+  } else if (classificationResult.Calss === "Dog") {
     req.body.type = 'dog'
     const filePathDog = `Scooby/Missing/Founded/Dogs`;
     const fileName = req.body.petImage;
