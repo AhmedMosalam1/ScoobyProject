@@ -395,41 +395,39 @@ exports.filtercatsforkids=catchAsync(async (req, res, next) => {
 
 
 //******************************************** */
-exports.successAdapted=catchAsync(async (req, res, next) => {
-  const pets = await petModel.find({
-    successflyAdaped:true,
-  
-  });
-  //console.log(req.query)
-  
+exports.getallpetsquery = catchAsync(async (req, res, next) => {
+  // Check if type query parameter is provided
+  if (req.query.type) {
+    const typee = req.query.type;
 
-  //console.log(pets)
-  if (!pets) {
-    return next(new appError(`cant find my pets`, 404));
-  }
-  res.status(200).json({
-    status: "success",
-    data: pets,
-  });
-});
-
-exports.getallpetsquery=catchAsync(async (req, res, next) => {
-  if(req.query.type){
-    const typee=req.query.type
-    if(typee=='cat'|| typee=='dog'){
-    const pets = await petModel.find({type:typee});
-    res.status(200).json({
-      status: "success",
-      data: pets,
-    });
-  }
-  else if(typee=='all'){
+    // Validate the type value and query the database accordingly
+    if (typee === 'cat' || typee === 'dog') {
+      const pets = await petModel.find({ type: typee });
+      res.status(200).json({
+        status: "success",
+        data: pets,
+      });
+    } else if (typee === 'all') {
+      const pets = await petModel.find();
+      res.status(200).json({
+        status: "success",
+        data: pets,
+      });
+    } else {
+      // Invalid type value
+      res.status(400).json({
+        status: "fail",
+        message: "Invalid type value. Please choose 'cat', 'dog', or 'all'.",
+      });
+    }
+  } else {
+    // If no type query parameter is provided, return all pets by default
     const pets = await petModel.find();
     res.status(200).json({
       status: "success",
       data: pets,
     });
   }
-  }
 });
+
 
