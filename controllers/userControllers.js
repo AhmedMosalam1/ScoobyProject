@@ -96,12 +96,11 @@ exports.getOne = catchAsync(async (req, res, next) => {
     if (!doc) {
         return next(new appError(`Can't find User on this id`, 404));
     }
-    const n=req.headers
+
     res.status(201).json({
         status: "success",
         data: {
-            data: doc,
-            headers:n
+            data: doc
         }
     })
 })
