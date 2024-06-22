@@ -138,7 +138,7 @@ exports.getAll = catchAsync(async (req, res) => {
     const documents = await Vet.find();
     const a = req.headers.authorization
     const b = JSON.stringify(a)
-        console.log(b);
+        console.log(a);
     res
         .status(200)
         .json({ results: documents.length, data: documents });
