@@ -148,7 +148,9 @@ const uploadToClodinary = (buffer, filename, folderPath, options = {}) => {
 
 //---------------------------------------------------------------------------- add new pet
 exports.foundedPets= catchAsync(async (req, res, next) => {
-  req.body.locations.coordinates = req.body.locations.coordinates.split(',').map(coord => parseFloat(coord.trim()));
+  if(req.body.locations.coordinates){
+    req.body.locations.coordinates = req.body.locations.coordinates.split(',').map(coord => parseFloat(coord.trim()));
+  }
     const newpet = await foundedPet.create(req.body);
     res.status(201).json({
       status: "success",
