@@ -54,10 +54,13 @@ exports.upcomingBooking = catchAsync(async (req, res) => {
 //-------------------------------------------------------------past booking
 exports.pastBooking = catchAsync(async (req, res) => {
     const userId = req.user.id;
-    const request = await requestModel.find({
-        userId: userId,
-        date: { $lt: Date.now() },
-    });
+    //const request = await requestModel.find({
+        //userId: userId,
+        //date: { $lt: Date.now() },
+    //});
+    
+    const request = await requestModel.find();
+    
     res.status(200).json({
         request,
     });
