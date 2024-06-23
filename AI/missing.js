@@ -156,7 +156,7 @@ exports.missing = catchAsync(async (req, res, next) => {
             for (let i = 0; i < foundedPets.length; i++) {
                 let similarity = await getSimilarityDistance(image, foundedPets[i]);
 
-                let user = await FoundedModel.find({ petImage: foundedPets[i] });
+                let user = await FoundedModel.find({ petImage: foundedPets[i] }).populate('userId');
                 let userId = user[0].userId;
                 let description = user[0].description;
                 let location = user[0].locations;
