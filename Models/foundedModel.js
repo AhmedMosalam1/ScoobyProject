@@ -20,11 +20,7 @@ const foundedSchema = new mongoose.Schema({
     },
     locations:
     {
-        type: {
-            type: String,
-            default: "Point",
-        },
-        coordinates: [Number]
+        type:String
     },
     phoneNumber:{
         type:String
