@@ -50,6 +50,9 @@ exports.getCart = catchAsync(async (req, res, next) => {
     );
   }
 
+  const a = req.headers.authorization
+        console.log(a);
+
   res.status(200).json({
     status: 'success',
     numOfCartItems: cart.cartItems.length,
