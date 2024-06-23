@@ -167,7 +167,7 @@ exports.getallFounded=catchAsync(async (req, res, next) => {
   });
 //---------------------------------------------------------------------------- get cats
 exports.getcats=catchAsync(async (req, res, next) => {
-  const cats = await foundedPet.find({type:'cat'})
+  const cats = await foundedPet.find({type:'cat'}).populate('userId')
   const shuffledCats =await shufflePets(cats)
   res.status(201).json({
     length:shuffledCats.length,
@@ -176,7 +176,7 @@ exports.getcats=catchAsync(async (req, res, next) => {
 });
 //---------------------------------------------------------------------------- get dogs
 exports.getdogs=catchAsync(async (req, res, next) => {
-  const dogs = await foundedPet.find({type:'dog'})
+  const dogs = await foundedPet.find({type:'dog'}).populate('userId')
   const shuffledDogs =await shufflePets(dogs)
   res.status(201).json({
     length:dogs.length,
@@ -192,7 +192,7 @@ exports.getdogs=catchAsync(async (req, res, next) => {
 
     const recentlyAddedPets = await foundedPet.find({
         createdAt: { $gte: threeDaysAgo}
-    })
+    }).populate('userId')
 
     const shuffledPets = await shufflePets(recentlyAddedPets)
 
