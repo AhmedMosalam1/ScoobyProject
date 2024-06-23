@@ -37,7 +37,7 @@ exports.addRequest = catchAsync(async (req, res, next) => {
         ...req.body
     });
 
-    res.status(200).json({ request });
+    res.status(200).json({ status: 'success',request });
     //next()
 });
 //-------------------------------------------------------------upcoming booking
