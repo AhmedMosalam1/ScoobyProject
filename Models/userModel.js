@@ -10,6 +10,9 @@ const userSchema = new mongoose.Schema({
         //minlength:[3,'Minimum 3 characters'],
         //required:[true,'The name field must not be empty']
     },
+    firstName:String,
+    lastName:String,
+    bio:String,
     email: {
         type: String,
         //required:[true,'Please enter your email address '],
@@ -117,6 +120,21 @@ userSchema.pre('save', function(next) {
     }
     next();
 });
+
+userSchema.post('findOneAndUpdate', async function (doc) {
+    if (doc) {
+      const update = this.getUpdate().$set;
+      const modifiedFirstName = update.firstName !== undefined;
+      const modifiedLastName = update.lastName !== undefined;
+  
+      if (modifiedFirstName || modifiedLastName) {
+        const firstName = modifiedFirstName ? update.firstName : doc.firstName;
+        const lastName = modifiedLastName ? update.lastName : doc.lastName;
+        doc.name = `${firstName} ${lastName}`;
+        await doc.save();
+      }
+    }
+  });
 
 const userModel = mongoose.model("user", userSchema)
 
