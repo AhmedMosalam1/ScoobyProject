@@ -151,7 +151,7 @@ exports.foundedPets= catchAsync(async (req, res, next) => {
   //if(req.body.locations.coordinates){
     //req.body.locations.coordinates = req.body.locations.coordinates.split(',').map(coord => parseFloat(coord.trim()));
  // }
-    const newpet = await foundedPet.create(req.body).populate('userId');
+    const newpet = await foundedPet.create(req.body);
     res.status(201).json({
       status: "success",
       data: newpet,
