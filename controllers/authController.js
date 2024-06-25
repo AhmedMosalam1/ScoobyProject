@@ -64,12 +64,16 @@ exports.login = catchAsync(async (req, res, next) => {
 //------------------------------------------------------------------------------------------ log out
 
 exports.logout = catchAsync(async (req, res) => {
-  //req.logOut();
+  
   res.cookie("jwt", "loggedout", {
     expires: new Date(Date.now() - 1 * 1000),
     httpOnly: true,
   });
-  res.status(200).json({ status: "Logout successfully" });
+  req.logout((err) => {
+    if (err) { return next(new appError(`error in logout:${err}`, 401)); }
+    res.status(200).json({ status: "Logout successfully" });
+});
+  
 });
 
 //-------------------------------------------------------------------------------------------- forget password (send code)
