@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/addpet',petContrller.uploadPhoto,petContrller.resizePhotoProject,authcontroller.protect,petContrller.setUserIds,petContrller.addpettouser)
 router.post('/addpet-shelter/:id',petContrller.uploadPhoto,petContrller.resizePhotoProject,petContrller.setshelterIds,petContrller.addpettoshelter)
 
-router.post('/addpet',petContrller.uploadPhoto,petContrller.resizePhotoProject,petContrller.setUserIds,petContrller.addpet)
+//router.post('/addpet',petContrller.uploadPhoto,petContrller.resizePhotoProject,petContrller.setUserIds,petContrller.addpet)
 router.get('/get-top-collection',petContrller.filteradapt)
 router.get('/get-top-collection-cat',petContrller.filteradaptcat)
 router.get('/get-top-collection-dog',petContrller.filteradaptdog)
