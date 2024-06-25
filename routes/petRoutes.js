@@ -6,7 +6,7 @@ const authcontroller=require('../controllers/authController')
 const router = express.Router();
 
 // router.post('/addpet/:id',petContrller.uploadPhoto,petContrller.resizePhotoProject,petContrller.setUserIds,petContrller.addpettouser)
-router.post('/addpetuser',petContrller.uploadPhoto,petContrller.resizePhotoProject,authcontroller.protect,petContrller.setUserIds,petContrller.addpettouser)
+router.post('/addpetuser',authcontroller.protect,petContrller.uploadPhoto,petContrller.resizePhotoProject,petContrller.setUserIds,petContrller.addpettouser)
 router.post('/addpet-shelter/:id',petContrller.uploadPhoto,petContrller.resizePhotoProject,petContrller.setshelterIds,petContrller.addpettoshelter)
 
 router.post('/addpet',petContrller.uploadPhoto,petContrller.resizePhotoProject,petContrller.setUserIds,petContrller.addpet)
