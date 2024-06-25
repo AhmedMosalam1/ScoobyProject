@@ -2,11 +2,12 @@ const express = require("express");
 const morgan = require("morgan");
 const compression = require("compression")
 const cookieParser = require("cookie-parser")
+const session = require('express-session');
 const bodyParser = require("body-parser")
 const passport = require('passport');
 const cors = require("cors")
 
-//const express_session = require('express-session');
+
 require("dotenv").config();
 require('./config/passport-setup')
 
@@ -44,8 +45,16 @@ app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 //   maxAge: 3600000 // Cookie lifespan in milliseconds (1 hour in this example)
 // }
 // }));
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(session({
+  secret: 'your-secret-key', // Replace with a strong secret key
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set secure to true if using HTTPS
+}));
+
+ app.use(passport.initialize());
+ app.use(passport.session());
+
 //app.use(express_session);
 app.use(cookieParser());
 app.use(bodyParser.json());
