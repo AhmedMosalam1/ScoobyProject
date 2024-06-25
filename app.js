@@ -46,10 +46,10 @@ app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 // }
 // }));
 app.use(session({
-  secret: 'your-secret-key', // Replace with a strong secret key
+  secret: 'scoobyFamily', // Replace with a strong secret key
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Set secure to true if using HTTPS
+  //cookie: { secure: false } // Set secure to true if using HTTPS
 }));
 
  app.use(passport.initialize());
