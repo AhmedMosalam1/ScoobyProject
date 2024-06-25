@@ -178,7 +178,7 @@ exports.missing = catchAsync(async (req, res, next) => {
             let sortedSimilarityArray = similarityArray.sort((a, b) => b.similarity - a.similarity);
             console.log(sortedSimilarityArray);
             console.log("--------------------");
-            res.status(200).json({ similarityArray: sortedSimilarityArray.slice(0, 2) });
+            res.status(200).json({ uploadedImage: image,similarityArray: sortedSimilarityArray.slice(0, 2) });
             console.log("End......");
         } catch (err) {
             return next(new appError("Error in processing the request", 500));
