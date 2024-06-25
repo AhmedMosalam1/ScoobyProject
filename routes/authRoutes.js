@@ -12,8 +12,11 @@ router.post("/checkCode",authController.checkforgotpasscode)
 router.post('/reset-password/:userId',authController.getresetpass)
 
 router.get('/google', passport.authenticate('google', {scope: ['profile'],}));
-router.get('/auth/google/redirect', passport.authenticate('google'),);
-
+router.get('/auth/google/redirect', passport.authenticate('google'),(req, res) => {
+    // res.send(req.user);
+   // console.log(res);
+    res.redirect('http://localhost:4200/home');
+});
 router.get('/facebook', passport.authenticate('facebook', { scope : 'email' }));
 router.get('/auth/facebook/callback',passport.authenticate('facebook'));
 
