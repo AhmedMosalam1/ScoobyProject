@@ -27,16 +27,8 @@ if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
 }
 
-const corsOptions = {
-    origin: 'http://localhost:4200',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-};
-
-// Use CORS with the specified options
-app.use(cors(corsOptions));
-
-// Handle OPTIONS requests
-app.options('*', cors(corsOptions));
+app.use(cors())
+app.options('*',cors())
 
 app.post('/webhook-checkout', express.raw({ type: 'application/json' }), webhookCheckout)
 
