@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 const corsOptions = {
-    origin: 'http://localhost:4200',"*",
+    origin: 'http://localhost:4200',' * ',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 };
 
