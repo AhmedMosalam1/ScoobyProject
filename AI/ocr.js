@@ -100,5 +100,8 @@ exports.ocr = catchAsync(async (req, res, next) => {
 
     console.log(filteredProducts);
     console.log("----------------------");
-    res.status(200).json({filteredProducts});
+        res.status(200).json({
+        status:'success',
+        results:filteredProducts.length,
+        data:filteredProducts});
 });
