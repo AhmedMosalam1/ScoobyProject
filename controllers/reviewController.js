@@ -269,3 +269,16 @@ exports.deleteReview =catchAsync(async (req, res, next) => {
         }
     });
 
+   exports.getReviewsUser=catchAsync(async (req, res, next) => {
+     
+
+    const userid=req.params.id
+    const Reviews = await reviewModel.find({ user: userid }).select("-__v");
+    
+
+    res.status(200).json({
+        status: "success",
+        result: Reviews.length,
+        data: { Reviews },
+    });
+});
