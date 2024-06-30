@@ -188,7 +188,7 @@ exports.getdogs=catchAsync(async (req, res, next) => {
 
     const currentDate = new Date();
     const threeDaysAgo = new Date();
-    threeDaysAgo.setDate(currentDate.getDate() - 3);
+    threeDaysAgo.setDate(currentDate.getDate() - 21);
 
     const recentlyAddedPets = await foundedPet.find({
         createdAt: { $gte: threeDaysAgo}
