@@ -25,6 +25,7 @@ router.get('/getAllReview/:id',reviewController.getAllReview)
 router.delete('/deleteReview/:id',reviewController.deleteReview)
 router.patch('/updateReview/:id',reviewController.updateReview)
 router.get('/getMyReviews',AuthController.protect,reviewController.getMyReviews)
+router.get('/ReviewOfUser/:id',reviewController.getReviewsUser)
 //router.get('/getAllAppReviews',reviewController.getAllAppReviews)
 
 
