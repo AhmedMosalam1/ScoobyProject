@@ -10,6 +10,7 @@ router.post('/addPost',communityController.uploadPhoto1, communityController.res
 router.patch('/likeAndDisLike',communityController.likeAndDisLike)
 router.get('/getAllPosts',communityController.getAllPosts)
 router.get('/myMoments',communityController.getMyMoments)
+router.get('/userMoments/:id',communityController.getUserMoments)
 router.patch('/editPost',communityController.editPost)
 router.delete('/deletePost',communityController.deletePost)
 

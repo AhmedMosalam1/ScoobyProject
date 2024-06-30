@@ -55,6 +55,20 @@ exports.getAllPosts = catchAsync(async(req,res)=>{
         processedPosts
     })
 })
+//-------------------------------------------------------------get user posts
+exports.getUserMoments = catchAsync(async(req,res)=>{
+    const userId = req.params.id ;
+    const myId = req.user.id
+    const userMoments = await communityModel.find({userId:userId})
+    const processedPosts = await Promise.all(userMoments.map(async (post) => {
+        const userLikedThisPost = post.likes_Id.includes(myId);
+        return {post, liked: userLikedThisPost };
+    }));
+    res.status(200).json({
+        processedPosts
+    })
+    
+})
 //-------------------------------------------------------------delete post
 exports.deletePost = catchAsync(async(req,res)=>{
     const post = req.user.id

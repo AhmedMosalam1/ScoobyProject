@@ -9,8 +9,12 @@ const requestSchema = new mongoose.Schema({
     userId:{
         type:String
     },
-    serviceType:{
+    serviceImage:{
         type:String
+    },
+    serviceType:{
+        type:String,
+        enum:["Pet Walking","Pet Veterinary","Pet Training","Pet Taxi","Pet Sitting","Pet Grooming","Pet Boarding"]
     },
     servicePrice:{
         type:Number
@@ -39,6 +43,9 @@ const requestSchema = new mongoose.Schema({
     payment:{
         type:String,
         enum:['Visa','Master Card','Local Cards','Mobile Wallet','Cash']
+    },
+    paymentImage:{
+        type:String
     },
     country:{
         type:String
