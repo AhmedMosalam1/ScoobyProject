@@ -6,7 +6,7 @@ exports.addFav = catchAsync(async (req, res, next) => {
 
     if (req.query.productId) {
         const productId = req.query.productId;
-        const userId = req.params.id;
+        const userId = req.user.id;
 
         const user = await User.findById(userId);
 
@@ -47,7 +47,7 @@ exports.addFav = catchAsync(async (req, res, next) => {
         }
     } else if (req.query.petId) {
         const petId = req.query.petId;
-        const userId = req.params.id;
+        const userId = req.user.id;
 
         const user = await User.findById(userId);
 
@@ -93,7 +93,7 @@ exports.addFav = catchAsync(async (req, res, next) => {
 
 exports.getFavProduct = catchAsync(async (req, res, next) => {
 
-        const user = await User.findById(req.params.id).populate('favProduct');
+        const user = await User.findById(req.user.id).populate('favProduct');
 
         return res.status(200).json({
             status: 'success',
@@ -103,7 +103,7 @@ exports.getFavProduct = catchAsync(async (req, res, next) => {
 });
 
 exports.getFavPet = catchAsync(async (req, res, next) => {
-        const user = await User.findById(req.params.id).populate('favPet');
+        const user = await User.findById(req.user.id).populate('favPet');
 
         return res.status(200).json({
             status: 'success',

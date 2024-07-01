@@ -25,24 +25,11 @@ exports.createCashOrder = catchAsync(async (req, res, next) => {
   const totalOrderPrice = cartPrice + taxPrice + shippingPrice;
 
   const order = await Order.create({
-    user: req.params.id,
+    user: req.user.id,
     cartItems: cart.cartItems,
     shippingAddress: req.body.shippingAddress,
     totalOrderPrice,
   });
-
-  // if (order) {
-  //     const bulkOption = cart.cartItems.map((item) => ({
-  //       updateOne: { //main operation
-  //         filter: { _id: item.product }, // firts sub-main operation
-  //         update: { $inc: { quantity: -item.quantity} }, // second sub-main operation  --- -(sub quanitity)
-  //       },
-  //     }));
-
-  //     await Product.bulkWrite(bulkOption, {});
-
-  //     await Cart.findByIdAndDelete(req.params.cartId);
-  //   }
 
   await Cart.findByIdAndDelete(req.query.cartId);
   res.status(201).json({ status: 'success', data: order });
@@ -59,7 +46,7 @@ exports.getAllOrders = catchAsync(async (req, res) => {
 });
 
 exports.getAllOwnOrders = catchAsync(async (req, res) => {
-  const id = req.params.id
+  const id = req.user.id
 
   const documents = await Order.find({ user: id });
 

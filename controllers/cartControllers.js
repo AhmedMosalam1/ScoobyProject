@@ -10,11 +10,11 @@ exports.addProductToCart = catchAsync(async (req, res, next) => {
   const { productId } = req.query;
   const product = await Product.findById(productId);
 
-  let cart = await Cart.findOne({ user: req.params.id });
+  let cart = await Cart.findOne({ user: req.user.id });
 
   if (!cart) {
     cart = await Cart.create({
-      user: req.params.id,
+      user: req.user.id,
       cartItems: [{ product: productId, price: product.priceAfterDiscount }],
     });
   } else {
@@ -42,11 +42,11 @@ exports.addProductToCart = catchAsync(async (req, res, next) => {
 
 
 exports.getCart = catchAsync(async (req, res, next) => {
-  const cart = await Cart.findOne({ user: req.params.id }).populate('cartItems.product');
+  const cart = await Cart.findOne({ user: req.user.id }).populate('cartItems.product');
 
   if (!cart) {
     return next(
-      new appError(`There is no cart for this user id : ${req.params.id}`, 404)
+      new appError(`There is no cart for this user id : ${req.user.id}`, 404)
     );
   }
 
@@ -62,7 +62,7 @@ exports.getCart = catchAsync(async (req, res, next) => {
 
 exports.removeItemFromCart = catchAsync(async (req, res, next) => {
   const cart = await Cart.findOneAndUpdate(
-    { user: req.params.id },
+    { user: req.user.id },
     {
       $pull: { cartItems: { product: req.query.itemId } },
     },
@@ -81,7 +81,7 @@ exports.removeItemFromCart = catchAsync(async (req, res, next) => {
 
 
 exports.clearCart = catchAsync(async (req, res, next) => {
-  const cart = await Cart.findOneAndDelete({ user: req.params.id });
+  const cart = await Cart.findOneAndDelete({ user: req.user.id });
 
   // if (!cart) {
   //   return next(
@@ -96,10 +96,10 @@ exports.clearCart = catchAsync(async (req, res, next) => {
 
 exports.updateCartItemPlus = catchAsync(async (req, res, next) => {
 
-  const cart = await Cart.findOne({ user: req.params.id });
+  const cart = await Cart.findOne({ user: req.user.id });
 
   if (!cart) {
-    return next(new appError(`there is no cart for user ${req.params.id}`, 404));
+    return next(new appError(`there is no cart for user ${req.user.id}`, 404));
   }
 
   const itemIndex = cart.cartItems.findIndex(
@@ -133,10 +133,10 @@ exports.updateCartItemPlus = catchAsync(async (req, res, next) => {
 
 exports.updateCartItemMinus = catchAsync(async (req, res, next) => {
 
-  const cart = await Cart.findOne({ user: req.params.id });
+  const cart = await Cart.findOne({ user: req.user.id });
 
   if (!cart) {
-    return next(new appError(`there is no cart for user ${req.params.id}`, 404));
+    return next(new appError(`there is no cart for user ${req.user.id}`, 404));
   }
 
   const itemIndex = cart.cartItems.findIndex(
@@ -179,12 +179,10 @@ exports.applyCoupon = catchAsync(async (req, res, next) => {
     return next(new appError(`Coupon is invalid or expired`));
   }
 
-  const cart = await Cart.findOne({ user: req.params.id });
+  const cart = await Cart.findOne({ user: req.user.id });
 
   if (!cart) {
-    return next(
-      new appError(`There is no such cart with id ${req.query.cartId}`, 404)
-    );
+    return next(new appError(`there is no cart for user ${req.user.id}`, 404));
   }
 
   const totalPrice = cart.totalCartPrice;

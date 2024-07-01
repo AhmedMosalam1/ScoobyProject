@@ -5,7 +5,7 @@ const cloudinary = require("../utils/cloud");
 const FoundedModel = require("../Models/foundedModel");
 const multer = require("multer");
 const sharp = require("sharp");
-const resemble = require("resemblejs");
+//const resemble = require("resemblejs");
 
 let image;
 
