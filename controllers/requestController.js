@@ -85,6 +85,9 @@ exports.addRequest = catchAsync(async (req, res, next) => {
         ...req.body
     });
 
+     const a = req.headers.authorization
+        console.log(a);
+
     res.status(200).json({ status: 'success',request });
     //next()
 });
