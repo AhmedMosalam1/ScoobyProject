@@ -122,19 +122,19 @@ userSchema.pre('save', function(next) {
 });
 
 userSchema.post('findOneAndUpdate', async function (doc) {
-    if (doc) {
-      const update = this.getUpdate().$set;
-      const modifiedFirstName = update.firstName !== undefined;
-      const modifiedLastName = update.lastName !== undefined;
-  
-      if (modifiedFirstName || modifiedLastName) {
-        const firstName = modifiedFirstName ? update.firstName : doc.firstName;
-        const lastName = modifiedLastName ? update.lastName : doc.lastName;
-        doc.name = `${firstName} ${lastName}`;
-        await doc.save();
-      }
+  if (doc) {
+    const update = this.getUpdate().$set || {};
+    const modifiedFirstName = update.hasOwnProperty('firstName');
+    const modifiedLastName = update.hasOwnProperty('lastName');
+
+    if (modifiedFirstName || modifiedLastName) {
+      const firstName = modifiedFirstName ? update.firstName : doc.firstName;
+      const lastName = modifiedLastName ? update.lastName : doc.lastName;
+      doc.name = `${firstName} ${lastName}`;
+      await doc.save();
     }
-  });
+  }
+});
 
 const userModel = mongoose.model("user", userSchema)
 
