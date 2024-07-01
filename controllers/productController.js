@@ -157,14 +157,6 @@ exports.getAll = catchAsync(async (req, res) => {
 
         const documents = await Product.find(obj).skip(skip).limit(limit);
         
-        const a = req.headers.authorization
-        console.log(a);
-        
-        console.log("-----------------------------------------------------------------------------------------------------------")
-        
-        const b = req.headers.cookie
-        console.log(b);
-        
         return res.status(200).json({
             status: 'success',
             results: documents.length,
@@ -176,6 +168,14 @@ exports.getAll = catchAsync(async (req, res) => {
     }
 
     const documents = await Product.find(obj)
+
+     const a = req.headers.authorization
+        console.log(a);
+        
+        console.log("-----------------------------------------------------------------------------------------------------------")
+        
+        const b = req.headers.cookie
+        console.log(b);
 
     res.status(200).json({
         status: 'success',
