@@ -156,8 +156,15 @@ exports.getAll = catchAsync(async (req, res) => {
         const totalCount = await Product.countDocuments(obj);
 
         const documents = await Product.find(obj).skip(skip).limit(limit);
-    const a = req.headers.authorization
+        
+        const a = req.headers.authorization
         console.log(a);
+        
+        console.log("-----------------------------------------------------------------------------------------------------------")
+        
+        const b = req.headers.cookie
+        console.log(b);
+        
         return res.status(200).json({
             status: 'success',
             results: documents.length,
