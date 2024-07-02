@@ -10,7 +10,7 @@ const plogSchema = new mongoose.Schema({
        // required:[true,'The image field must not be empty']
      
     },
-    discription:{
+    description:{
         type:String,
         //required:[true,'The image field must not be empty']
        
