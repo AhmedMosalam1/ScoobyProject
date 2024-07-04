@@ -37,6 +37,12 @@ exports.addRequest = catchAsync(async (req, res, next) => {
 
     }else if(serviceType ==="Pet Taxi"){
         serviceImage = "https://res.cloudinary.com/dtny7jzz1/image/upload/v1719732593/Scooby/Requests/Pet_Taxi_tjncqa.png"
+    }else if(serviceType ==="Daycare"){
+        serviceImage = "https://res.cloudinary.com/dtny7jzz1/image/upload/v1719732595/Scooby/Requests/Pet_Sitting_s8ezos.png"
+
+    }else if(serviceType ==="Pet hotel"){
+        serviceImage = "https://res.cloudinary.com/dtny7jzz1/image/upload/v1719732594/Scooby/Requests/Pet_Boarding_gfaw9u.png"
+        
     }
 
 
