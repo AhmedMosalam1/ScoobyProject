@@ -154,8 +154,8 @@ exports.missing = catchAsync(async (req, res, next) => {
             const resources = await getAllResources(options);
             const foundedPets = resources.map((obj) => obj.secure_url);
 
-            console.log(foundedPets);
-            console.log("--------------------");
+            // console.log(foundedPets);
+            // console.log("--------------------");
 
             const similarityPromises = foundedPets.map(async (foundedPet) => {
                 const similarity = await getSimilarityDistance(image, foundedPet);
@@ -181,8 +181,8 @@ exports.missing = catchAsync(async (req, res, next) => {
             const similarityArray = await Promise.all(similarityPromises);
 
             let sortedSimilarityArray = similarityArray.sort((a, b) => b.similarity - a.similarity);
-            console.log(sortedSimilarityArray);
-            console.log("--------------------");
+            // console.log(sortedSimilarityArray);
+            // console.log("--------------------");
 
             res.status(200).json({ 
                 uploadedImage: image, 
