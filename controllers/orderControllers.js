@@ -129,7 +129,7 @@ exports.checkoutSession = catchAsync(async (req, res, next) => {
       quantity: 1,//for one amount item
     }],
     mode: 'payment',
-    success_url: `${req.protocol}://${req.get('host')}/shop`,
+    success_url: `http://localhost:4200/home`,
     cancel_url: `${req.protocol}://${req.get('host')}/cart`,
     customer_email: cart.user.email,
     client_reference_id: req.query.cartId,
